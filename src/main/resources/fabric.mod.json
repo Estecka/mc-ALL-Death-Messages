@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "alldeathmessages",
+	"version": "${version}",
+
+	"name": "ALL Death Messages",
+	"description": "Enable death messages for ALL entities.",
+	"authors": [
+		"Estecka"
+	],
+	"contact": {
+		"homepage": "https://modrinth.com/mod/all-death-messages",
+		"sources": "https://github.com/Estecka/mc-all-death-messages"
+	},
+
+	"icon": "assets/alldeath/icon.png",
+
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.fabricmc.alldeath.AllDeathMessages"
+		]
+	},
+	"mixins": [
+		"alldeath.mixins.json"
+	],
+
+	"depends": {
+		"fabricloader": ">=0.14.19",
+		"fabric-api": "*",
+		"minecraft": "~1.19.4",
+		"java": ">=17"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
