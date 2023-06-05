@@ -1,4 +1,6 @@
 {
 	"gamerule.showDeathMessagesNamed": "Show named mobs deathes",
-	"gamerule.showDeathMessagesOther": "Show other mobs deathes"
+	"gamerule.showDeathMessagesOther": "Show other mobs deathes",
+	"gamerule.showDeathMessagesNamedKill": "Show named mobs kills",
+	"gamerule.showDeathMessagesOtherKill": "Show other mobs kills"
 }

@@ -12,7 +12,9 @@ import net.minecraft.world.GameRules.Category;
 
 public class DeathRules implements ModInitializer {
 	public static final GameRules.Key<GameRules.BooleanRule> NAMED_DEATH = BooleanRule("Named", true);
+	public static final GameRules.Key<GameRules.BooleanRule> NAMED_KILL  = BooleanRule("NamedKill", true);
 	public static final GameRules.Key<GameRules.BooleanRule> OTHER_DEATH = BooleanRule("Other", false);
+	public static final GameRules.Key<GameRules.BooleanRule> OTHER_KILL  = BooleanRule("OtherKill", true);
 
 	// public static final CustomGameRuleCategory CATEGORY = new CustomGameRuleCategory(new Identifier("alldeath", "messages"), Text.of("Death Messages"));
 
