@@ -2,6 +2,7 @@ package net.fabricmc.alldeath.mixin;
 
 import net.fabricmc.alldeath.AllDeathMessages;
 import net.fabricmc.alldeath.DeathRules;
+import net.fabricmc.alldeath.DeathRules.MobCategory;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -19,27 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LivingEntity.class)
 public class Thanatos 
 {
-	private static boolean	ShouldHandleEntityDeath(LivingEntity entity){
-		return !entity.world.isClient
-			&& GetRule(entity.world, GameRules.SHOW_DEATH_MESSAGES)
-			&& !(entity instanceof TameableEntity && ((TameableEntity)entity).getOwner() != null)
-			;
-	}
-
-	private static boolean	HasDeathRule(LivingEntity entity){
-		return (GetRule(entity.world, DeathRules.NAMED_DEATH) && entity.hasCustomName())
-			|| (GetRule(entity.world, DeathRules.OTHER_DEATH))
-			;
-	}
-	private static boolean	HasKillRule(Entity entity){
-		if (entity == null)
-			return false;
-		return (GetRule(entity.world, DeathRules.NAMED_KILL) && (entity.hasCustomName() || entity.isPlayer()))
-			|| (GetRule(entity.world, DeathRules.OTHER_KILL))
-			;
-	}
-
-	private static boolean	GetRule(World world, GameRules.Key<BooleanRule> key){
+	private static boolean	IsRuleEnabled(World world, GameRules.Key<BooleanRule> key){
 		BooleanRule rule = world.getGameRules().get(key);
 		if (rule != null)
 			return rule.get();
@@ -47,6 +28,28 @@ public class Thanatos
 			AllDeathMessages.LOGGER.error("The rule {} doesn't exist", key.getName());
 			return false;
 		}
+	}
+
+	private static boolean	ShouldHandleEntityDeath(LivingEntity entity){
+		return !entity.world.isClient
+			&& IsRuleEnabled(entity.world, GameRules.SHOW_DEATH_MESSAGES)
+			&& !(entity instanceof TameableEntity && ((TameableEntity)entity).getOwner() != null)
+			;
+	}
+
+	private static GameRules.Key<BooleanRule>	HasDeathRule(LivingEntity entity){
+		for (DeathRules.MobCategory cat : DeathRules.GetCategories(entity))
+			if (IsRuleEnabled(entity.world, cat.death))
+				return cat.death;
+		return null;
+	}
+	private static GameRules.Key<BooleanRule>	HasKillRule(Entity entity){
+		if (entity == null)
+			return null;
+		for (DeathRules.MobCategory cat : DeathRules.GetCategories(entity))
+			if (IsRuleEnabled(entity.world, cat.kill))
+				return cat.kill;
+		return null;
 	}
 
 
@@ -63,11 +66,14 @@ public class Thanatos
 		DamageTracker damages = dyingEntity.getDamageTracker();
 		Entity killer = damages.getMostRecentDamage().getAttacker();
 		LivingEntity assist = damages.getBiggestAttacker();
-		if (HasDeathRule(dyingEntity)
-		||  HasKillRule(killer)
-		||  HasKillRule(assist)
+
+		GameRules.Key<BooleanRule> rule;
+		if (null != (rule=HasDeathRule(dyingEntity))
+		|| 	null != (rule=HasKillRule(killer))
+		|| 	null != (rule=HasKillRule(assist))
 		){
 			MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(damages.getDeathMessage());
+			AllDeathMessages.LOGGER.info("Death message triggered by rule {}", rule);
 		}
 	}
 }
