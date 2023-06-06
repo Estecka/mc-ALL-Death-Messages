@@ -1,10 +1,12 @@
 # All Death Messages
 
-Displays a death message for any and all mob deathes. No filter options are available, but adding some in the futur isn't out of the question.
+Displays a death message for any and all mob deathes.
 
-This mod was made and tested for single-player. As of now, it probably won't work on servers.
+Death messages can be enabled or disabled in the gamerules, based on whether the entity has a custom name, and whether it has died or killed. An entity may be considered the killer either after dealing the final blow, or if it dealt the most damages to the victim.
+
 
 # Version
 
 - Minecraft 1.19.4
 - Fabric Loader 0.14.19 or above
+- Fabric API 0.79.0 or above
