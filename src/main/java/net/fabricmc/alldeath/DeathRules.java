@@ -21,13 +21,13 @@ public class DeathRules implements ModInitializer
 		public final GameRules.Key<GameRules.BooleanRule> death;
 		public final GameRules.Key<GameRules.BooleanRule> kill;
 		public MobCategory(String name, Boolean deathDefault, Boolean killDefault){
-			this.death = BooleanRule(name,        deathDefault);
-			this.kill  = BooleanRule(name+"Kill", killDefault );
+			this.death = BooleanRule(name+".death", deathDefault);
+			this.kill  = BooleanRule(name+".kill",  killDefault );
 		}
 	}
 
-	public static final MobCategory NAMED = new MobCategory("Named", true, true);
-	public static final MobCategory OTHER = new MobCategory("Other", false, true);
+	public static final MobCategory NAMED = new MobCategory("named", true, true);
+	public static final MobCategory OTHER = new MobCategory("other", false, true);
 
 	// public static final CustomGameRuleCategory CATEGORY = new CustomGameRuleCategory(new Identifier("alldeath", "messages"), Text.of("Death Messages"));
 
@@ -38,7 +38,7 @@ public class DeathRules implements ModInitializer
 
 	private static GameRules.Key<GameRules.BooleanRule>	BooleanRule(String name, boolean defaultValue){
 		// AllDeathMessages.LOGGER.warn("Registering: {}", name);
-		return GameRuleRegistry.register("showDeathMessages"+name, Category.CHAT, GameRuleFactory.createBooleanRule(defaultValue));
+		return GameRuleRegistry.register("showDeathMessages."+name, Category.CHAT, GameRuleFactory.createBooleanRule(defaultValue));
 	}
 
 	public static ArrayList<MobCategory>	GetCategories(Entity entity){
