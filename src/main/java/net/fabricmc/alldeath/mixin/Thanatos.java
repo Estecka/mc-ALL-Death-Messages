@@ -2,12 +2,12 @@ package net.fabricmc.alldeath.mixin;
 
 import net.fabricmc.alldeath.AllDeathMessages;
 import net.fabricmc.alldeath.DeathRules;
-import net.fabricmc.alldeath.DeathRules.MobCategory;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageTracker;
 import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.GameRules.BooleanRule;
@@ -72,7 +72,10 @@ public class Thanatos
 		|| 	null != (rule=HasKillRule(killer))
 		|| 	null != (rule=HasKillRule(assist))
 		){
-			MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(damages.getDeathMessage());
+			Text msg = damages.getDeathMessage();
+			// dyingEntity.getWorld().getServer().sendMessage(msg);
+			for (ServerPlayerEntity player : dyingEntity.world.getServer().getPlayerManager().getPlayerList())
+				player.sendMessage(msg);
 			AllDeathMessages.LOGGER.info("Death message triggered by rule {}", rule);
 		}
 	}

@@ -4,9 +4,9 @@
 	"package": "net.fabricmc.alldeath.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
+		"Thanatos"
 	],
 	"client": [
-		"Thanatos"
 	],
 	"server": [
 	],
