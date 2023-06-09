@@ -4,6 +4,7 @@ import tk.estecka.alldeath.AllDeathMessages;
 import tk.estecka.alldeath.DeathRules;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageRecord;
 import net.minecraft.entity.damage.DamageTracker;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -31,15 +32,15 @@ public class Thanatos
 	}
 
 	private static boolean	ShouldHandleEntityDeath(LivingEntity entity){
-		return !entity.world.isClient
-			&& IsRuleEnabled(entity.world, GameRules.SHOW_DEATH_MESSAGES)
+		return !entity.getWorld().isClient
+			&& IsRuleEnabled(entity.getWorld(), GameRules.SHOW_DEATH_MESSAGES)
 			&& !(entity instanceof TameableEntity && ((TameableEntity)entity).getOwner() != null)
 			;
 	}
 
 	private static GameRules.Key<BooleanRule>	HasDeathRule(LivingEntity entity){
 		for (DeathRules.MobCategory cat : DeathRules.GetCategories(entity))
-			if (IsRuleEnabled(entity.world, cat.death))
+			if (IsRuleEnabled(entity.getWorld(), cat.death))
 				return cat.death;
 		return null;
 	}
@@ -47,7 +48,7 @@ public class Thanatos
 		if (entity == null)
 			return null;
 		for (DeathRules.MobCategory cat : DeathRules.GetCategories(entity))
-			if (IsRuleEnabled(entity.world, cat.kill))
+			if (IsRuleEnabled(entity.getWorld(), cat.kill))
 				return cat.kill;
 		return null;
 	}
@@ -64,19 +65,23 @@ public class Thanatos
 			return;
 
 		DamageTracker damages = dyingEntity.getDamageTracker();
-		Entity killer = damages.getMostRecentDamage().getAttacker();
-		LivingEntity assist = damages.getBiggestAttacker();
-
+		Entity	rulingEntity = dyingEntity;
 		GameRules.Key<BooleanRule> rule;
-		if (null != (rule=HasDeathRule(dyingEntity))
-		|| 	null != (rule=HasKillRule(killer))
-		|| 	null != (rule=HasKillRule(assist))
-		){
+
+		if (null == (rule=HasDeathRule(dyingEntity)))
+		for (DamageRecord dmg : ((AllDamageTracker)damages).getRecentDamages()) 
+		{
+			rulingEntity = dmg.getAttacker();
+			if ( null != (rule=HasKillRule(rulingEntity)) )
+				break;
+		}
+
+		if (rule != null){
 			Text msg = damages.getDeathMessage();
-			// dyingEntity.getWorld().getServer().sendMessage(msg);
-			for (ServerPlayerEntity player : dyingEntity.world.getServer().getPlayerManager().getPlayerList())
+			dyingEntity.getWorld().getServer().sendMessage(msg);
+			for (ServerPlayerEntity player : dyingEntity.getWorld().getServer().getPlayerManager().getPlayerList())
 				player.sendMessage(msg);
-			AllDeathMessages.LOGGER.info("Death message triggered by rule {}", rule);
+			AllDeathMessages.LOGGER.info("Death message triggered by {} ({}) using rule {}", rulingEntity.getName().getString(), rulingEntity.getType(), rule);
 		}
 	}
 }

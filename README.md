@@ -2,7 +2,7 @@
 
 Displays a death message for any and all mob deathes.
 
-Death messages can be enabled or disabled in the gamerules, based on whether the entity has a custom name, and whether it has died or killed. An entity may be considered the killer either after dealing the final blow, or if it dealt the most damages to the victim.
+Death messages can be enabled or disabled in the gamerules, based on whether the entity has a custom name, and whether it has died or killed.
 
 
 # Version
