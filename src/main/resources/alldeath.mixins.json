@@ -4,6 +4,7 @@
 	"package": "tk.estecka.alldeath.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
+		"AllDamageTracker",
 		"Thanatos"
 	],
 	"client": [
