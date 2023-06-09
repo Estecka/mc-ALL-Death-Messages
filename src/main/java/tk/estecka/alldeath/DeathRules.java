@@ -1,7 +1,6 @@
-package net.fabricmc.alldeath;
+package tk.estecka.alldeath;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.gamerule.v1.CustomGameRuleCategory;

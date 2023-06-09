@@ -1,7 +1,7 @@
-package net.fabricmc.alldeath.mixin;
+package tk.estecka.alldeath.mixin;
 
-import net.fabricmc.alldeath.AllDeathMessages;
-import net.fabricmc.alldeath.DeathRules;
+import tk.estecka.alldeath.AllDeathMessages;
+import tk.estecka.alldeath.DeathRules;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageTracker;
