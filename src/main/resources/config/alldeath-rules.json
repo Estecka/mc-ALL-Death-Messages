@@ -7,7 +7,7 @@
 	],
 	"boss": [
 		"minecraft:ender_dragon",
-		"minecraft:guardian",
+		"minecraft:elder_guardian",
 		"minecraft:warden",
 		"minecraft:wither"
 	]
