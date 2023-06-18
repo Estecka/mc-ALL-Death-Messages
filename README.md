@@ -8,24 +8,7 @@ A mob may belong to multiple categories; it will trigger a death message if at l
 The built-in category "named" regroups all mobs that have been given a custom name, including all players.  
 The built-in category "other" regroups mobs that do not belong in any other category, including custom categories.  
 
-Custom categories can be created to regroup entities based on their type. They are defined in the config file `.minecraft/config/AllDeathMessages-rules.json`.  
-For example: 
-```json
-{
-	"utility": [
-		"minecraft:allay",
-		"minecraft:iron_golem",
-		"minecraft:villager",
-		"minecraft:wandering_trader"
-	],
-	"boss": [
-		"minecraft:ender_dragon",
-		"minecraft:guardian",
-		"minecraft:warden",
-		"minecraft:wither"
-	]
-}
-```
+Custom categories can be created to regroup entities based on their type. They are defined in the config file [`.minecraft/config/alldeath-rules.json`](./src/main/resources/config/alldeath-rules.json).
 
 ## Version
 

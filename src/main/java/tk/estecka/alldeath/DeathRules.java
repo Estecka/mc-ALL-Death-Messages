@@ -1,6 +1,6 @@
 package tk.estecka.alldeath;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,6 +15,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.world.GameRules.BooleanRule;
 import net.minecraft.world.GameRules.Category;
 import net.minecraft.world.GameRules.Key;
+import tk.estecka.alldeath.config.ConfigParser;
 import tk.estecka.alldeath.config.JsonConfig;
 
 
@@ -29,6 +30,8 @@ public class DeathRules implements ModInitializer
 			this.kill  = BooleanRule(name+".kill",  killDefault );
 		}
 	}
+
+	static public final String	CONFIG_FILE = "alldeath-rules.json";
 
 	static public final MobCategory NAMED = new MobCategory("named", true, true);
 	static public final MobCategory OTHER = new MobCategory("other", false, true);
@@ -66,15 +69,16 @@ public class DeathRules implements ModInitializer
 	@Override
 	public void onInitialize() 
 	{
+		JsonConfig configFile = new JsonConfig(CONFIG_FILE, AllDeathMessages.MODID, AllDeathMessages.LOGGER);
 		JsonElement json;
 		try {
-			json = JsonConfig.GetJsonFromFile("AllDeathMessages-rules");
-		} catch (FileNotFoundException e){
-			AllDeathMessages.LOGGER.error("The config file does not exist");
+			json = configFile.GetOrCreateJsonFile();
+		} catch (IOException e){
+			AllDeathMessages.LOGGER.error("Unable to load config file");
 			return;
 		}
 
-		var config = JsonConfig.CreateConfigFromJson(json);
+		var config = ConfigParser.CreateConfigFromJson(json);
 		for (String ruleName : config.keySet()){
 			if (!RESERVED_NAMES.contains(ruleName))
 				customRules.put(
