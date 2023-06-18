@@ -1,0 +1,14 @@
+{
+	"utility": [
+		"minecraft:allay",
+		"minecraft:iron_golem",
+		"minecraft:villager",
+		"minecraft:wandering_trader"
+	],
+	"boss": [
+		"minecraft:ender_dragon",
+		"minecraft:guardian",
+		"minecraft:warden",
+		"minecraft:wither"
+	]
+}

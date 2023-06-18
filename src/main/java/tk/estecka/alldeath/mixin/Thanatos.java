@@ -32,7 +32,7 @@ public class Thanatos
 	}
 
 	private static boolean	ShouldHandleEntityDeath(LivingEntity entity){
-		return !entity.getWorld().isClient
+		return !entity.getWorld().isClient()
 			&& IsRuleEnabled(entity.getWorld(), GameRules.SHOW_DEATH_MESSAGES)
 			&& !(entity instanceof TameableEntity && ((TameableEntity)entity).getOwner() != null)
 			;
