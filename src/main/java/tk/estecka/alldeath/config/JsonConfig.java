@@ -12,6 +12,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
 import tk.estecka.alldeath.AllDeathMessages;
 
 public class JsonConfig 
@@ -62,12 +64,20 @@ public class JsonConfig
 				String typeId = predicate.getAsString();
 				if (result.contains(typeId))
 					AllDeathMessages.LOGGER.warn("Rule \"{}\" contains a duplicate predicate ({})", ruleName, typeId);
-				else
+				else{
 					result.add(typeId);
+					SpellCheck(typeId);
+				}
 			} 
 		}
 
 		return result.toArray(new String[result.size()]);
+	}
+
+	static private void	SpellCheck(String typeName){
+		Identifier id = new Identifier(typeName);
+		if(id.getNamespace().equals("minecraft") && !Registries.ENTITY_TYPE.containsId(id))
+			AllDeathMessages.LOGGER.warn("The type \"{}\" does not exist in vanilla minecraft", id);
 	}
 
 }
