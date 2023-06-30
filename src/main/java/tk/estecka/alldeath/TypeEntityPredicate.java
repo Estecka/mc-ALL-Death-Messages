@@ -20,4 +20,7 @@ implements Predicate<Entity>
 		return false;
 	}
 	
+	public int	size(){
+		return types.length;
+	}
 }

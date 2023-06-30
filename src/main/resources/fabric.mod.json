@@ -19,7 +19,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"tk.estecka.alldeath.DeathRules"
+			"tk.estecka.alldeath.AllDeathMessages"
 		]
 	},
 	"mixins": [

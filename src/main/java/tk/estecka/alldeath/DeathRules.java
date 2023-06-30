@@ -7,20 +7,18 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
-
 import com.google.gson.JsonElement;
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.GameRules.BooleanRule;
 import net.minecraft.world.GameRules.Category;
 import net.minecraft.world.GameRules.Key;
-import tk.estecka.alldeath.config.ConfigParser;
+import tk.estecka.alldeath.config.RuleParser;
 import tk.estecka.alldeath.config.JsonConfig;
 
 
-public class DeathRules implements ModInitializer 
+public class DeathRules
 {
 	static public class MobCategory 
 	{
@@ -61,28 +59,27 @@ public class DeathRules implements ModInitializer
 		return result;
 	}
 
-	@Override
-	public void onInitialize() 
+	static public void initialize() 
 	{
 		JsonConfig configFile = new JsonConfig(CONFIG_FILE, AllDeathMessages.MODID, AllDeathMessages.LOGGER);
 		JsonElement json;
 		try {
 			json = configFile.GetOrCreateJsonFile();
 		} catch (IOException e){
-			AllDeathMessages.LOGGER.error("Unable to load config file");
+			AllDeathMessages.LOGGER.error("Unable to load config file: {}", CONFIG_FILE);
 			return;
 		}
 
-		var config = ConfigParser.CreateConfigFromJson(json);
-		for (String ruleName : config.keySet()){
+		HashMap<String, Predicate<Entity>> config = RuleParser.CreateConfigFromJson(json);
+		for (var entry : config.entrySet()){
+			String ruleName = entry.getKey();
 			if (RESERVED_NAMES.contains(ruleName))
 				AllDeathMessages.LOGGER.error("The rule name \"{}\" is reserved. The rule defined in the config will be ignored.", ruleName);
 			else {
-				Predicate<Entity> predicate = new TypeEntityPredicate(config.get(ruleName));
-				EntityPredicates.predicates.put(ruleName, predicate);
+				EntityPredicates.put(ruleName, entry.getValue());
 				customRules.put(
 					new MobCategory(ruleName, true, true),
-					predicate
+					entry.getValue()
 				);
 			}
 		}

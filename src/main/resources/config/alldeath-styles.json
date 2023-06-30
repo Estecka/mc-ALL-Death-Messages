@@ -1,0 +1,29 @@
+[
+	{
+		"rule": [
+			"minecraft:player"
+		],
+		"color": "yellow",
+		"italic": false,
+		"bold": true
+	},
+	{
+		"rule": "boss",
+		"color":"red",
+		"bold": true
+	},
+	{
+		"rule": "utility",
+		"color":"cyan",
+		"bold": true
+	},
+	{
+		"rule": "named",
+		"color": "magenta",
+		"italic": true
+	},
+	{
+		"rule": "other",
+		"color": "grey"
+	}
+]
