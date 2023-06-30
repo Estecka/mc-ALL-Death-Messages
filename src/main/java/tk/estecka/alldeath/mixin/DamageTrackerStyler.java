@@ -8,7 +8,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageRecord;
 import net.minecraft.entity.damage.DamageTracker;
 import net.minecraft.text.Text;
-import tk.estecka.alldeath.DamageStyler;
+import tk.estecka.alldeath.DeathStyles;
 
 @Mixin(DamageTracker.class)
 public abstract class DamageTrackerStyler 
@@ -21,7 +21,7 @@ public abstract class DamageTrackerStyler
 		)
 	)
 	private Text	getVictimeStyledName(LivingEntity entity){
-		return DamageStyler.getStyledName(entity);
+		return DeathStyles.getStyledName(entity);
 	}
 
 	@Redirect(
@@ -32,6 +32,6 @@ public abstract class DamageTrackerStyler
 		)
 	)
 	private Text	getAttackerStyledName(DamageRecord record){
-		return DamageStyler.getStyledName(record.getAttacker());
+		return DeathStyles.getStyledName(record.getAttacker());
 	}
 }

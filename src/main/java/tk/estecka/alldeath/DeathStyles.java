@@ -6,7 +6,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
-public class DamageStyler 
+public class DeathStyles 
 {
 	public static Text	getStyledName(LivingEntity entity)
 	{
@@ -19,7 +19,7 @@ public class DamageStyler
 
 	public static Text	getStyledName(Entity entity){
 		if (entity instanceof LivingEntity)
-			return DamageStyler.getStyledName((LivingEntity)entity);
+			return getStyledName((LivingEntity)entity);
 		else if (entity != null)
 			return entity.getDisplayName();
 		else

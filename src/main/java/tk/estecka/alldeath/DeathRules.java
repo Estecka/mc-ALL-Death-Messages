@@ -6,12 +6,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
+
 import com.google.gson.JsonElement;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.world.GameRules.BooleanRule;
 import net.minecraft.world.GameRules.Category;
 import net.minecraft.world.GameRules.Key;
@@ -35,7 +36,7 @@ public class DeathRules implements ModInitializer
 
 	static public final MobCategory NAMED = new MobCategory("named", true, true);
 	static public final MobCategory OTHER = new MobCategory("other", false, true);
-	static private HashMap<MobCategory, String[]> customRules = new HashMap<MobCategory, String[]>();
+	static private HashMap<MobCategory, Predicate<Entity>> customRules = new HashMap<MobCategory, Predicate<Entity>>();
 	static public final Set<String> RESERVED_NAMES = new HashSet<String>(){{
 		add("named");
 		add("other");
@@ -48,16 +49,10 @@ public class DeathRules implements ModInitializer
 
 	static public ArrayList<MobCategory>	GetCategories(Entity entity){
 		ArrayList<MobCategory> result = new ArrayList<DeathRules.MobCategory>();
-		
-		String entityType = EntityType.getId(entity.getType()).toString();
-		for (Entry<MobCategory, String[]> entry : customRules.entrySet()) {
-			for (String type : entry.getValue())
-			if (type.equals(entityType)) {
-				entity.getType();
+
+		for (Entry<MobCategory, Predicate<Entity>> entry : customRules.entrySet())
+			if (entry.getValue().test(entity))
 				result.add(entry.getKey());
-				break;
-			}
-		}
 
 		if (entity.hasCustomName() || entity.isPlayer())
 			result.add(NAMED);
@@ -80,13 +75,17 @@ public class DeathRules implements ModInitializer
 
 		var config = ConfigParser.CreateConfigFromJson(json);
 		for (String ruleName : config.keySet()){
-			if (!RESERVED_NAMES.contains(ruleName))
+			if (RESERVED_NAMES.contains(ruleName))
+				AllDeathMessages.LOGGER.error("The rule name \"{}\" is reserved. The rule defined in the config will be ignored.", ruleName);
+			else {
+				Predicate<Entity> predicate = new TypeEntityPredicate(config.get(ruleName));
+				EntityPredicates.predicates.put(ruleName, predicate);
 				customRules.put(
 					new MobCategory(ruleName, true, true),
-					config.get(ruleName)
+					predicate
 				);
-			else
-				AllDeathMessages.LOGGER.error("The rule name \"{}\" is reserved. The rule defined in the config will be ignored.", ruleName);
+			}
 		}
 	}
+
 }
