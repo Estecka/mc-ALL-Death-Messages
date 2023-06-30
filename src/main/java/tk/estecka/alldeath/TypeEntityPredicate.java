@@ -3,6 +3,7 @@ package tk.estecka.alldeath;
 import java.util.function.Predicate;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 
 public class TypeEntityPredicate 
 implements Predicate<Entity>
@@ -15,12 +16,12 @@ implements Predicate<Entity>
 
 	public boolean	test(Entity entity){
 		for (var t : this.types)
-			if (entity.getType().toString().equals(t))
+			if (EntityType.getId(entity.getType()).toString().equals(t))
 				return true;
 		return false;
 	}
 	
-	public int	size(){
-		return types.length;
+	public boolean	IsEmpty(){
+		return types.length <= 0;
 	}
 }

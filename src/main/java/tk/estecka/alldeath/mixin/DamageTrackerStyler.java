@@ -4,6 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageRecord;
 import net.minecraft.entity.damage.DamageTracker;
@@ -32,6 +33,10 @@ public abstract class DamageTrackerStyler
 		)
 	)
 	private Text	getAttackerStyledName(DamageRecord record){
-		return DeathStyles.getStyledName(record.getAttacker());
+		Entity atk = record.getAttacker();
+		if (atk != null)
+			return DeathStyles.getStyledName(record.getAttacker());
+		else
+			return null;
 	}
 }

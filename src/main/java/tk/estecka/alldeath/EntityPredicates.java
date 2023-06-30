@@ -14,6 +14,7 @@ public class EntityPredicates {
 		put("hostile",    EntityPredicates::HOSTILE   );
 		put("passive",    EntityPredicates::PASSIVE   );
 		put("persistent", EntityPredicates::PERSISTENT);
+		put("all", e->true);
 	}};
 
 	static public boolean	NAMED(Entity e){ return e.hasCustomName() || e.isPlayer(); }

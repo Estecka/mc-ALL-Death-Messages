@@ -25,7 +25,7 @@ public class RuleParser {
 			TypeEntityPredicate rule = PredicateParser.CreateTypePredicateFromJson(root.get(ruleName), gson);
 			if (rule == null)
 				AllDeathMessages.LOGGER.error("Invalid rule \"{}\"", ruleName);
-			else if (rule.size() <= 0)
+			else if (rule.IsEmpty())
 				AllDeathMessages.LOGGER.warn("Rule \"{}\" contains no valid predicate and will be ignored", ruleName);
 			else
 				config.put(ruleName, rule);
