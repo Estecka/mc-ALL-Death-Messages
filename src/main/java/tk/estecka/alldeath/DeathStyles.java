@@ -8,10 +8,10 @@ import java.util.function.Predicate;
 import com.google.gson.JsonElement;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import tk.estecka.alldeath.config.JsonConfig;
 import tk.estecka.alldeath.config.StyleParser;
 
@@ -20,8 +20,9 @@ public class DeathStyles
 	static public class	MobStyle
 	{
 		public Predicate<Entity> predicate = e->false;
-		public Boolean bold = null;
-		public Boolean italic = null;
+		public TextColor color   = null;
+		public Boolean bold      = null;
+		public Boolean italic    = null;
 		public Boolean underline = null;
 
 		public boolean IsEmpty(){
@@ -30,6 +31,7 @@ public class DeathStyles
 
 		public MobStyle	MergeWith(MobStyle bottom)
 		{
+			if (this.color     == null) this.color     = bottom.color;
 			if (this.bold      == null) this.bold      = bottom.bold;
 			if (this.italic    == null) this.italic    = bottom.italic;
 			if (this.underline == null) this.underline = bottom.underline;
@@ -48,8 +50,9 @@ public class DeathStyles
 				deathStyle.MergeWith(s);
 
 		Text name = entity.getDisplayName();
-		Style textStyle = name.getStyle().withColor(0xffff00);
+		Style textStyle = name.getStyle();
 
+		if (deathStyle.color     != null) textStyle=textStyle.withColor    (deathStyle.color    );
 		if (deathStyle.bold      != null) textStyle=textStyle.withBold     (deathStyle.bold     );
 		if (deathStyle.italic    != null) textStyle=textStyle.withItalic   (deathStyle.italic   );
 		if (deathStyle.underline != null) textStyle=textStyle.withUnderline(deathStyle.underline);

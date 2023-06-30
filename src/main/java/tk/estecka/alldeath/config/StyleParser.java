@@ -10,6 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.text.TextColor;
 import tk.estecka.alldeath.AllDeathMessages;
 import tk.estecka.alldeath.EntityPredicates;
 import tk.estecka.alldeath.DeathStyles.MobStyle;
@@ -57,7 +58,7 @@ public class StyleParser
 			return null;
 		}
 
-
+		style.color     = GetOptionalColor(jObj);
 		style.bold      = GetOptionalBool(jObj, "bold");
 		style.italic    = GetOptionalBool(jObj, "italic");
 		style.underline = GetOptionalBool(jObj, "underline");
@@ -82,6 +83,25 @@ public class StyleParser
 		}
 		else
 			return null;
+	}
+
+	static private TextColor	GetOptionalColor(JsonObject parent){
+		if (!parent.has("color"))
+			return null;
+
+		JsonElement elt = parent.get("color");
+		if (elt.isJsonNull())
+			return null;
+		if (!elt.isJsonPrimitive() || !elt.getAsJsonPrimitive().isString()){
+			AllDeathMessages.LOGGER.error("Invalid colour format: {}", elt);
+			return null;
+		}
+
+		String colourString = elt.getAsString();
+		TextColor c = TextColor.parse(colourString);
+		if (c == null)
+			AllDeathMessages.LOGGER.error("Invalid colour name: {}", colourString);
+		return c;
 	}
 
 	static private Boolean	GetOptionalBool(JsonObject parent, String keyName){
