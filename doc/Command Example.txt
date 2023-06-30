@@ -1,0 +1,22 @@
+/tellraw @s { "text":"black",        "color":"black"        }
+/tellraw @s { "text":"dark_blue",    "color":"dark_blue"    }
+/tellraw @s { "text":"dark_green",   "color":"dark_green"   }
+/tellraw @s { "text":"dark_aqua",    "color":"dark_aqua"    }
+/tellraw @s { "text":"dark_red",     "color":"dark_red"     }
+/tellraw @s { "text":"dark_purple",  "color":"dark_purple"  }
+/tellraw @s { "text":"gold",         "color":"gold"         }
+/tellraw @s { "text":"gray",         "color":"gray"         }
+/tellraw @s { "text":"dark_gray",    "color":"dark_gray"    }
+/tellraw @s { "text":"blue",         "color":"blue"         }
+/tellraw @s { "text":"green",        "color":"green"        }
+/tellraw @s { "text":"aqua",         "color":"aqua"         }
+/tellraw @s { "text":"red",          "color":"red"          }
+/tellraw @s { "text":"light_purple", "color":"light_purple" }
+/tellraw @s { "text":"yellow",       "color":"yellow"       }
+/tellraw @s { "text":"white",        "color":"white"        }
+
+/tellraw @s [ "obfuscated: ",    { "text":"obfuscated",       "obfuscated":    true} ]
+/tellraw @s [ "bold: ",          { "text":"bold",             "bold":          true} ]
+/tellraw @s [ "italic: ",        { "text":"italic",           "italic":        true} ]
+/tellraw @s [ "strikethrough: ", { "text":"strikethrough",    "strikethrough": true} ]
+/tellraw @s [ "underline: ",     { "text":"\u00A7nunderline" }]

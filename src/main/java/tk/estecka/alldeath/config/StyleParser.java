@@ -62,6 +62,8 @@ public class StyleParser
 		style.bold      = GetOptionalBool(jObj, "bold");
 		style.italic    = GetOptionalBool(jObj, "italic");
 		style.underline = GetOptionalBool(jObj, "underline");
+		style.strike    = GetOptionalBool(jObj, "strikethrough");
+		style.cursed    = GetOptionalBool(jObj, "obfuscated");
 		return style;
 	}
 

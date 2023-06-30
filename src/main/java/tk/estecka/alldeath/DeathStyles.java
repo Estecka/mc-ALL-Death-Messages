@@ -24,6 +24,8 @@ public class DeathStyles
 		public Boolean bold      = null;
 		public Boolean italic    = null;
 		public Boolean underline = null;
+		public Boolean strike    = null;
+		public Boolean cursed    = null;
 
 		public boolean IsEmpty(){
 			return bold==null && italic==null && underline!=null;
@@ -35,6 +37,8 @@ public class DeathStyles
 			if (this.bold      == null) this.bold      = bottom.bold;
 			if (this.italic    == null) this.italic    = bottom.italic;
 			if (this.underline == null) this.underline = bottom.underline;
+			if (this.strike    == null) this.strike    = bottom.strike   ;
+			if (this.cursed    == null) this.cursed    = bottom.cursed   ;
 			return this;
 		}
 	}
@@ -52,10 +56,12 @@ public class DeathStyles
 		Text name = entity.getDisplayName();
 		Style textStyle = name.getStyle();
 
-		if (deathStyle.color     != null) textStyle=textStyle.withColor    (deathStyle.color    );
-		if (deathStyle.bold      != null) textStyle=textStyle.withBold     (deathStyle.bold     );
-		if (deathStyle.italic    != null) textStyle=textStyle.withItalic   (deathStyle.italic   );
-		if (deathStyle.underline != null) textStyle=textStyle.withUnderline(deathStyle.underline);
+		if (deathStyle.color     != null) textStyle=textStyle.withColor        (deathStyle.color    );
+		if (deathStyle.bold      != null) textStyle=textStyle.withBold         (deathStyle.bold     );
+		if (deathStyle.italic    != null) textStyle=textStyle.withItalic       (deathStyle.italic   );
+		if (deathStyle.underline != null) textStyle=textStyle.withUnderline    (deathStyle.underline);
+		if (deathStyle.strike    != null) textStyle=textStyle.withStrikethrough(deathStyle.strike   );
+		if (deathStyle.cursed    != null) textStyle=textStyle.withObfuscated   (deathStyle.cursed   );
 
 		return MutableText.of(name.getContent()).setStyle(textStyle);
 	}
