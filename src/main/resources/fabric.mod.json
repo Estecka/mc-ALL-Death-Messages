@@ -4,7 +4,7 @@
 	"version": "${version}",
 
 	"name": "ALL Death Messages",
-	"description": "Enable death messages for ALL entities.",
+	"description": "Configurable death messages for ALL entities.",
 	"authors": [
 		"Estecka"
 	],
