@@ -5,6 +5,8 @@
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
 		"AllDamageTracker",
+		"DamageSourceStyler",
+		"DamageTrackerStyler",
 		"Thanatos"
 	],
 	"client": [

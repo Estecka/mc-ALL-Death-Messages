@@ -4,7 +4,7 @@
 	"version": "${version}",
 
 	"name": "ALL Death Messages",
-	"description": "Enable death messages for ALL entities.",
+	"description": "Configurable death messages for ALL entities.",
 	"authors": [
 		"Estecka"
 	],
@@ -19,7 +19,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"tk.estecka.alldeath.DeathRules"
+			"tk.estecka.alldeath.AllDeathMessages"
 		]
 	},
 	"mixins": [
