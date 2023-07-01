@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.google.gson.JsonElement;
 
 import net.minecraft.entity.Entity;
@@ -20,15 +22,21 @@ public class DeathStyles
 	static public class	MobStyle
 	{
 		public Predicate<Entity> predicate = e->false;
-		public TextColor color   = null;
-		public Boolean bold      = null;
-		public Boolean italic    = null;
-		public Boolean underline = null;
-		public Boolean strike    = null;
-		public Boolean cursed    = null;
+		@Nullable public TextColor color   = null;
+		@Nullable public Boolean bold      = null;
+		@Nullable public Boolean italic    = null;
+		@Nullable public Boolean underline = null;
+		@Nullable public Boolean strike    = null;
+		@Nullable public Boolean cursed    = null;
 
 		public boolean IsEmpty(){
-			return bold==null && italic==null && underline!=null;
+			return color     == null
+			    && bold      == null
+			    && italic    == null
+			    && underline == null
+			    && strike    == null
+			    && cursed    == null
+			    ;
 		}
 
 		public MobStyle	MergeWith(MobStyle bottom)

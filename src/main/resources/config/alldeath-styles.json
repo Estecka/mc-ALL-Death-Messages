@@ -4,8 +4,17 @@
 			"minecraft:player"
 		],
 		"color": "yellow",
+		"bold": false,
 		"italic": false,
-		"bold": true
+		"underline": false
+	},
+	{
+		"rule": "named",
+		"underline": true
+	},
+	{
+		"rule": "utility",
+		"color":"aqua"
 	},
 	{
 		"rule": "boss",
@@ -13,17 +22,15 @@
 		"bold": true
 	},
 	{
-		"rule": "utility",
-		"color":"cyan",
-		"bold": true
+		"rule": "hostile",
+		"color":"#ff6666"
 	},
 	{
-		"rule": "named",
-		"color": "magenta",
-		"italic": true
+		"rule": "ephemeral",
+		"color":"gray"
 	},
 	{
-		"rule": "other",
-		"color": "grey"
+		"rule": "passive",
+		"color": "#77ff22"
 	}
 ]

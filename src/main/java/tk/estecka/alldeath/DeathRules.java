@@ -52,7 +52,7 @@ public class DeathRules
 			if (entry.getValue().test(entity))
 				result.add(entry.getKey());
 
-		if (entity.hasCustomName() || entity.isPlayer())
+		if (EntityPredicates.NAMED(entity))
 			result.add(NAMED);
 		if (result.isEmpty())
 			result.add(OTHER);
