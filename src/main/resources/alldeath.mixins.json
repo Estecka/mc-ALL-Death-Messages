@@ -3,11 +3,13 @@
 	"minVersion": "0.8",
 	"package": "tk.estecka.alldeath.mixin",
 	"compatibilityLevel": "JAVA_17",
+	"plugin": "tk.estecka.alldeath.mixin.Config",
 	"mixins": [
-		"AllDamageTracker",
-		"DamageSourceStyler",
-		"DamageTrackerStyler",
-		"Thanatos"
+		"DamageSourceMixin",
+		"DamageTrackerMixin",
+		"EntityMixin",
+		"IDamageTrackerMixin",
+		"LivingEntityMixin"
 	],
 	"client": [
 	],

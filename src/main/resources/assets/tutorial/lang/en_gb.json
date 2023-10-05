@@ -1,6 +1,0 @@
-{
-	"gamerule.showDeathMessages.named.death": "Show named mobs deathes",
-	"gamerule.showDeathMessages.named.kill":  "Show named mobs kills",
-	"gamerule.showDeathMessages.other.death": "Show other mobs deathes",
-	"gamerule.showDeathMessages.other.kill":  "Show other mobs kills"
-}

@@ -4,11 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
-
 import org.jetbrains.annotations.Nullable;
-
 import com.google.gson.JsonElement;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
@@ -54,14 +51,12 @@ public class DeathStyles
 	static public final String CONFIG_FILE = "alldeath-styles.json";
 	static public final List<MobStyle> STYLES = new ArrayList<MobStyle>();
 
-	static public Text	getStyledName(Entity entity)
-	{
+	static public Text	getStyledName(Entity entity, Text name) {
 		MobStyle deathStyle = new MobStyle();
 		for (var s : STYLES)
 			if (s.predicate.test(entity))
 				deathStyle.MergeWith(s);
 
-		Text name = entity.getDisplayName();
 		Style textStyle = name.getStyle();
 
 		if (deathStyle.color     != null) textStyle=textStyle.withColor        (deathStyle.color    );
