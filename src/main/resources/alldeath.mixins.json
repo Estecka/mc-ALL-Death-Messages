@@ -5,11 +5,11 @@
 	"compatibilityLevel": "JAVA_17",
 	"plugin": "tk.estecka.alldeath.mixin.Config",
 	"mixins": [
-		"AllDamageTracker",
+		"DamageSourceMixin",
+		"DamageTrackerMixin",
 		"EntityMixin",
-		"DamageSourceStyler",
-		"DamageTrackerStyler",
-		"Thanatos"
+		"IDamageTrackerMixin",
+		"LivingEntityMixin"
 	],
 	"client": [
 	],

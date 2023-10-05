@@ -5,10 +5,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
+import org.jetbrains.annotations.Nullable;
 import com.google.gson.JsonElement;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.World;
 import net.minecraft.world.GameRules.BooleanRule;
 import net.minecraft.world.GameRules.Category;
 import net.minecraft.world.GameRules.Key;
@@ -23,39 +27,31 @@ public class DeathRules
 		public final Key<BooleanRule> death;
 		public final Key<BooleanRule> kill;
 		public MobCategory(String name, Boolean deathDefault, Boolean killDefault){
-			this.death = BooleanRule(name+".death", deathDefault);
-			this.kill  = BooleanRule(name+".kill",  killDefault );
+			this.death = CreateBooleanRule(name+".death", deathDefault);
+			this.kill  = CreateBooleanRule(name+".kill",  killDefault );
 		}
 	}
 
 	static public final String	CONFIG_FILE = "alldeath-rules.json";
-
 	static private HashMap<MobCategory, Predicate<Entity>> customRules = new HashMap<MobCategory, Predicate<Entity>>();
 
-	static private Key<BooleanRule>	BooleanRule(String name, boolean defaultValue){
+
+	static private Key<BooleanRule>	CreateBooleanRule(String name, boolean defaultValue){
 		return GameRuleRegistry.register("showDeathMessages."+name, Category.CHAT, GameRuleFactory.createBooleanRule(defaultValue));
 	}
 
-	static public ArrayList<MobCategory>	GetCategories(Entity entity){
-		ArrayList<MobCategory> result = new ArrayList<DeathRules.MobCategory>();
-
-		for (Entry<MobCategory, Predicate<Entity>> entry : customRules.entrySet())
-			if (entry.getValue().test(entity))
-				result.add(entry.getKey());
-
-		// if (result.isEmpty())
-		// 	result.add(OTHER);
-		return result;
+	static private void	InitializeBuiltinRule(String ruleName, boolean death, boolean kill){
+		customRules.put(new MobCategory(ruleName, death, kill), EntityPredicates.getOrDefault(ruleName));
 	}
 
 	static public void initialize() 
 	{
-		InitializeBuiltinRule("all",        false, true );
-		InitializeBuiltinRule("named",      true,  true );
-		InitializeBuiltinRule("persistent", true,  false);
-		InitializeBuiltinRule("ephemeral",  false, false);
-		InitializeBuiltinRule("hostile",    false, false);
-		InitializeBuiltinRule("passive",    false, false);
+		InitializeBuiltinRule("all"       , false, true );
+		InitializeBuiltinRule("named"     , true , true );
+		InitializeBuiltinRule("persistent", true , false);
+		InitializeBuiltinRule("ephemeral" , false, false);
+		InitializeBuiltinRule("hostile"   , false, false);
+		InitializeBuiltinRule("passive"   , false, false);
 
 		JsonConfig configFile = new JsonConfig(CONFIG_FILE, AllDeathMessages.MODID, AllDeathMessages.LOGGER);
 		JsonElement json;
@@ -81,8 +77,30 @@ public class DeathRules
 		}
 	}
 
-	static private void	InitializeBuiltinRule(String ruleName, boolean death, boolean kill){
-		customRules.put(new MobCategory(ruleName, death, kill), EntityPredicates.getOrDefault(ruleName));
+	public static boolean	IsRuleEnabled(World world, GameRules.Key<BooleanRule> key){
+		BooleanRule rule = world.getGameRules().get(key);
+		if (rule != null)
+			return rule.get();
+		else {
+			AllDeathMessages.LOGGER.error("The rule {} doesn't exist", key.getName());
+			return false;
+		}
+	}
+
+	@Nullable
+	public static GameRules.Key<BooleanRule>	HasDeathRule(LivingEntity entity){
+		for (var entry : customRules.entrySet())
+			if (IsRuleEnabled(entity.getWorld(), entry.getKey().death) && entry.getValue().test(entity))
+				return entry.getKey().death;
+		return null;
+	}
+
+	@Nullable
+	public static GameRules.Key<BooleanRule>	HasKillRule(Entity entity){
+		for (var entry : customRules.entrySet())
+			if (IsRuleEnabled(entity.getWorld(), entry.getKey().kill) && entry.getValue().test(entity))
+				return entry.getKey().kill;
+		return null;
 	}
 
 }
