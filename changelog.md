@@ -22,6 +22,9 @@ Initial release
 - Added the ability to apply colours and styles to the mob names
 
 ## 1.5
-- Added `persistent`, `ephemeral`, `hostile` and `passive` as built-in rules. Replaced `other` with `all`.
 - Added the ability to see entity coordinates in the Advanced Tooltips.
+- Added `persistent`, `ephemeral`, `hostile` and `passive` as built-in rules
+- Removed the `other` rule, now replaced with `all`.
+- Death messages for tamed entities are handled more reliably in multiplayer.
+- Builtin gamerules may now be overwritten by the rules in the config.
 - Installed MixinExtras and refactored all mixins.
