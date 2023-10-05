@@ -1,6 +1,6 @@
 package tk.estecka.alldeath;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 import net.minecraft.entity.Entity;
@@ -9,13 +9,13 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 
 public class EntityPredicates {
-	static public final Map<String, Predicate<Entity>>	predicates = new HashMap<String, Predicate<Entity>>(){{
+	static public final Map<String, Predicate<Entity>>	predicates = new LinkedHashMap<String, Predicate<Entity>>(8){{
+		put( "all", e->true );
 		put( "named",      EntityPredicates::NAMED      );
+		put( "persistent", EntityPredicates::PERSISTENT );
 		put( "hostile",    EntityPredicates::HOSTILE    );
 		put( "passive",    EntityPredicates::PASSIVE    );
-		put( "persistent", EntityPredicates::PERSISTENT );
 		put( "ephemeral",  EntityPredicates::EPHEMERAL  );
-		put( "all", e->true );
 	}};
 
 	static public boolean	NAMED(Entity e) { return e.hasCustomName() || e.isPlayer(); }

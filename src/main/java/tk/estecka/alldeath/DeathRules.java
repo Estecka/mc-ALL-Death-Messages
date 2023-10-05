@@ -3,8 +3,6 @@ package tk.estecka.alldeath;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
 import com.google.gson.JsonElement;
@@ -32,14 +30,7 @@ public class DeathRules
 
 	static public final String	CONFIG_FILE = "alldeath-rules.json";
 
-	static public final MobCategory NAMED = new MobCategory("named", true, true);
-	static public final MobCategory OTHER = new MobCategory("other", false, true);
 	static private HashMap<MobCategory, Predicate<Entity>> customRules = new HashMap<MobCategory, Predicate<Entity>>();
-	static public final Set<String> RESERVED_NAMES = new HashSet<String>(){{
-		add("named");
-		add("other");
-	}};
-
 
 	static private Key<BooleanRule>	BooleanRule(String name, boolean defaultValue){
 		return GameRuleRegistry.register("showDeathMessages."+name, Category.CHAT, GameRuleFactory.createBooleanRule(defaultValue));
@@ -52,15 +43,20 @@ public class DeathRules
 			if (entry.getValue().test(entity))
 				result.add(entry.getKey());
 
-		if (EntityPredicates.NAMED(entity))
-			result.add(NAMED);
-		if (result.isEmpty())
-			result.add(OTHER);
+		// if (result.isEmpty())
+		// 	result.add(OTHER);
 		return result;
 	}
 
 	static public void initialize() 
 	{
+		InitializeBuiltinRule("all",        false, true );
+		InitializeBuiltinRule("named",      true,  true );
+		InitializeBuiltinRule("persistent", true,  false);
+		InitializeBuiltinRule("ephemeral",  false, false);
+		InitializeBuiltinRule("hostile",    false, false);
+		InitializeBuiltinRule("passive",    false, false);
+
 		JsonConfig configFile = new JsonConfig(CONFIG_FILE, AllDeathMessages.MODID, AllDeathMessages.LOGGER);
 		JsonElement json;
 		try {
@@ -73,7 +69,7 @@ public class DeathRules
 		HashMap<String, Predicate<Entity>> config = RuleParser.CreateConfigFromJson(json);
 		for (var entry : config.entrySet()){
 			String ruleName = entry.getKey();
-			if (RESERVED_NAMES.contains(ruleName))
+			if (EntityPredicates.predicates.containsKey(ruleName))
 				AllDeathMessages.LOGGER.error("The rule name \"{}\" is reserved. The rule defined in the config will be ignored.", ruleName);
 			else {
 				EntityPredicates.put(ruleName, entry.getValue());
@@ -83,6 +79,10 @@ public class DeathRules
 				);
 			}
 		}
+	}
+
+	static private void	InitializeBuiltinRule(String ruleName, boolean death, boolean kill){
+		customRules.put(new MobCategory(ruleName, death, kill), EntityPredicates.getOrDefault(ruleName));
 	}
 
 }
