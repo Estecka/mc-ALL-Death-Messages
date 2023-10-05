@@ -1,4 +1,6 @@
 {
+	"gamerule.showDeathCoordinates": "Show death coordinates",
+	"gamerule.showDeathCoordinates.description": "Advanced tooltip will show an entity's coordinate, when hovering its name in the chat.",
 	"gamerule.showDeathMessages.named.death": "Show named mobs deathes",
 	"gamerule.showDeathMessages.named.kill":  "Show named mobs kills",
 	"gamerule.showDeathMessages.other.death": "Show other mobs deathes",
