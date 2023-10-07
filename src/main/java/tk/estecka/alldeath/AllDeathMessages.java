@@ -19,5 +19,6 @@ public class AllDeathMessages implements ModInitializer
 	public void	onInitialize(){
 		DeathRules.initialize();
 		DeathStyles.initialize();
+		Commands.Register();
 	}
 }

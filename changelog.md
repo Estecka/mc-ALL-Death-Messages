@@ -22,9 +22,14 @@ Initial release
 - Added the ability to apply colours and styles to the mob names
 
 ## 1.5
+### 1.5.0
 - Added the ability to see entity coordinates in the Advanced Tooltips.
 - Added `persistent`, `ephemeral`, `hostile` and `passive` as built-in rules
 - Removed the `other` rule, now replaced with `all`.
 - Death messages for tamed entities are handled more reliably in multiplayer.
 - Builtin gamerules may now be overwritten by the rules in the config.
 - Installed MixinExtras and refactored all mixins.
+###	1.5.1
+- Added `/alldeathmsg test` command to check a mobs categories.
+- Jockeys, mobs in vehicles, and Endermen carrying blocks are no longer considered persistent.
+- The Wither and the Ender Dragon are no longer considered ephemeral.
