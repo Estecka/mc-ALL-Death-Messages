@@ -23,12 +23,14 @@ public class EntityPredicates {
 	static public boolean	PASSIVE(Entity e) { return e instanceof PassiveEntity; }
 	static public boolean	EPHEMERAL(Entity e) { return !PERSISTENT(e); }
 
-	static public boolean	PERSISTENT(Entity e) {
-		if (!(e instanceof MobEntity))
+	static public boolean	PERSISTENT(Entity entity) {
+		if (!(entity instanceof MobEntity mob))
 			return false;
 
-		MobEntity m = (MobEntity)e;
-		return (m.isPersistent() || m.cannotDespawn() || !m.canImmediatelyDespawn(Double.POSITIVE_INFINITY));
+		return mob.isPersistent()
+			//|| m.cannotDespawn() 
+			|| !mob.canImmediatelyDespawn(Double.POSITIVE_INFINITY)
+			;
 	}
 
 	static public	Predicate<Entity>	getOrDefault(String name){
