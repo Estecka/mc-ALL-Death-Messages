@@ -51,6 +51,10 @@ public class DeathStyles
 	static public final String CONFIG_FILE = "alldeath-styles.json";
 	static public final List<MobStyle> STYLES = new ArrayList<MobStyle>();
 
+	static public Text	getStyledName(Entity entity) {
+		return getStyledName(entity, entity.getDisplayName());
+	}
+
 	static public Text	getStyledName(Entity entity, Text name) {
 		MobStyle deathStyle = new MobStyle();
 		for (var s : STYLES)
