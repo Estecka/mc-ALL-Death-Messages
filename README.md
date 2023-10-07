@@ -21,15 +21,12 @@ A mob may belong to multiple categories; it will trigger a death message if at l
 - `hostile`: Mobs treated as hostile by the game's code.
 - `passive`: Mobs treated as passive by the game's code. This is _not_ the negation of `hostile; some mobs are neither hostile nor passive.
 
-(The game's builtin way of checking whether a mob can despawn is quite unreliable, so `persistent` and `ephemeral` may yield some unexpected results. In the future, I will need to handle a few exceptions for them to work as expected.)
-
 ### Custom categories
 Custom categories are defined in `.minecraft/config/alldeath-rules.json`.
 
 Each key in the root object is used as a category name. The associated value is an array of strings, representing the entity types that can trigger the gamerule.
 
-### Categories example
-This example is provided as the default config file.
+This example is provided as the default config file:
 ```json
 {
 	"utility": [
