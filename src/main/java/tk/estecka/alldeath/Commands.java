@@ -3,6 +3,8 @@ package tk.estecka.alldeath;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.entity.Entity;
@@ -17,6 +19,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.GameRules.BooleanRule;
 import tk.estecka.alldeath.DeathRules.MobCategory;
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 import static com.mojang.brigadier.arguments.BoolArgumentType.bool;
 import static com.mojang.brigadier.arguments.BoolArgumentType.getBool;
 import static com.mojang.brigadier.arguments.StringArgumentType.string;
@@ -60,7 +63,9 @@ public class Commands
 
 		root.then(literal("set")
 			.then(argument(RULENAME_ARG, string())
+				.suggests(Commands::RulenameAutofill)
 				.then(argument(RULETYPE_ARG, string())
+					.suggests(Commands::RuletypeAutofill)
 					.then(argument(BOOL_ARG, bool())
 						.executes(Commands::SetRule)
 					)	
@@ -69,6 +74,18 @@ public class Commands
 		);
 
 		dispatcher.register(root);
+	}
+
+	static private CompletableFuture<Suggestions> RulenameAutofill(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder){
+		for (var name : DeathRules.nameToRule.keySet())
+			builder.suggest(name);
+		return builder.buildFuture();
+	}
+
+	static private CompletableFuture<Suggestions> RuletypeAutofill(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder){
+		builder.suggest("kill");
+		builder.suggest("death");
+		return builder.buildFuture();
 	}
 
 	static private int	TestEntities(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
