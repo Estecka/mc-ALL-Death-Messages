@@ -19,7 +19,7 @@ A mob may belong to multiple categories; it will trigger a death message if at l
 - `persistent`: Mobs that will not naturally despawn.
 - `ephemeral`: The negation of `persistent`
 - `hostile`: Mobs treated as hostile by the game's code.
-- `passive`: Mobs treated as passive by the game's code. This is _not_ the negation of `hostile; some mobs are neither hostile nor passive.
+- `passive`: Mobs treated as passive by the game's code. This is _not_ the negation of `hostile`; some mobs are neither hostile nor passive.
 
 ### Custom categories
 Custom categories are defined in `.minecraft/config/alldeath-rules.json`.

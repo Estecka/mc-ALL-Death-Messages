@@ -1,6 +1,5 @@
 package tk.estecka.alldeath;
 
-import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -12,10 +11,12 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.command.CommandManager.RegistrationEnvironment;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.GameRules.BooleanRule;
+import tk.estecka.alldeath.DeathRules.MobCategory;
 import java.util.Collection;
 import static com.mojang.brigadier.arguments.BoolArgumentType.bool;
 import static com.mojang.brigadier.arguments.BoolArgumentType.getBool;
@@ -58,7 +59,9 @@ public class Commands
 		root.then(literal("set")
 			.then(argument(RULENAME_ARG, string())
 				.then(argument(RULETYPE_ARG, string())
-					.executes(Commands::SetRule)
+					.then(argument(BOOL_ARG, bool())
+						.executes(Commands::SetRule)
+					)	
 				)
 			)
 		);
@@ -91,11 +94,11 @@ public class Commands
 	static private int	SeeEnabled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 		final World world = context.getSource().getWorld();
 		final GameRules gamerules = world.getGameRules();
-		for (var rule : DeathRules.GetRules()) {
-			boolean death = gamerules.getBoolean(rule.death);
-			boolean kill  = gamerules.getBoolean(rule.kill);
+		for (var rule : DeathRules.nameToRule.entrySet()) {
+			boolean death = gamerules.getBoolean(rule.getValue().death);
+			boolean kill  = gamerules.getBoolean(rule.getValue().kill);
 			if (death || kill){
-				MutableText text = Text.literal(rule.name).append(": ");
+				MutableText text = Text.literal(rule.getKey()).append(": ").formatted(Formatting.BOLD);
 				if (death) text.append("death");
 				if (death && kill) text.append(", ");
 				if (kill ) text.append("kill" );
@@ -109,7 +112,7 @@ public class Commands
 		final World world = context.getSource().getWorld();
 		final GameRules gamerules = world.getGameRules();
 		final MinecraftServer server = world.getServer();
-		for (var rule : DeathRules.GetRules()) {
+		for (var rule : DeathRules.nameToRule.values()) {
 			gamerules.get(rule.death).set(false, server);
 			gamerules.get(rule.kill ).set(false, server);
 		}
@@ -117,12 +120,33 @@ public class Commands
 		return 1;
 	}
 
+	static private int	SetRuleFailure(CommandContext<ServerCommandSource> context, String ruleName, String ruleType){
+		context.getSource().sendError(Text.translatableWithFallback("command.alldeathmsg.set.failure", "Invalid rule name: %s.%s", ruleName, ruleType));
+		return -1;
+	}
+
 	static private int	SetRule(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 		final World world = context.getSource().getWorld();
 		final GameRules gamerules = world.getGameRules();
 
-		String ruleKey = String.format("showDeathMessages.%s.%s", getString(context, RULENAME_ARG), getString(context, RULETYPE_ARG));
+		String ruleName = getString(context, RULENAME_ARG);
+		String ruleType = getString(context, RULETYPE_ARG);
+		boolean value = getBool(context, BOOL_ARG);
 
-		return 0;
+		MobCategory rules = DeathRules.nameToRule.get(getString(context, RULENAME_ARG));
+		if (rules == null)
+			return SetRuleFailure(context, ruleName, ruleType);
+
+		GameRules.Key<BooleanRule> ruleKey;
+		switch (ruleType) {
+			case "death": ruleKey=rules.death; break;
+			case "kill" : ruleKey=rules.kill ; break;
+			default: return SetRuleFailure(context, ruleName, ruleType);
+		}
+
+		BooleanRule rule = gamerules.get(ruleKey);
+		rule.set(value, world.getServer());
+		context.getSource().sendFeedback(Text.translatable("commands.gamerule.set", ruleKey.getName(), rule.toString()), true);
+		return 1;
 	}
 }

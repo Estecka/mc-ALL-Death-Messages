@@ -1,5 +1,6 @@
 {
 	"command.alldeathmsg.disable-all.success": "Disabled all death messages",
+	"command.alldeathmsg.set.failure": "Invalid rule name: %s.%s",
 	"gamerule.showDeathCoordinates": "Show death coordinates",
 	"gamerule.showDeathCoordinates.description": "Advanced tooltip will show an entity's coordinate, when hovering its name in the chat.",
 	"gamerule.showDeathMessages.all.death": "Show ALL Death Messages",

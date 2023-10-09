@@ -22,29 +22,23 @@ public class DeathRules
 {
 	static public class MobCategory 
 	{
-		public final String name;
 		public final Key<BooleanRule> death;
 		public final Key<BooleanRule> kill;
 		public MobCategory(String name, Boolean deathDefault, Boolean killDefault){
-			this.name = name;
 			this.death = CreateBooleanRule(name+".death", deathDefault);
 			this.kill  = CreateBooleanRule(name+".kill",  killDefault );
 		}
 	}
 
 	static public final String	CONFIG_FILE = "alldeath-rules.json";
-	static private HashMap<MobCategory, Predicate<Entity>> customRules = new HashMap<MobCategory, Predicate<Entity>>();
-
-	static public Iterable<MobCategory> GetRules(){
-		return customRules.keySet();
-	}
+	static public final HashMap<String,MobCategory> nameToRule = new HashMap<>();
 
 	static private Key<BooleanRule>	CreateBooleanRule(String name, boolean defaultValue){
 		return GameRuleRegistry.register("showDeathMessages."+name, Category.CHAT, GameRuleFactory.createBooleanRule(defaultValue));
 	}
 
 	static private void	InitializeBuiltinRule(String ruleName, boolean death, boolean kill){
-		customRules.put(new MobCategory(ruleName, death, kill), EntityPredicates.getOrDefault(ruleName));
+		nameToRule.put(ruleName, new MobCategory(ruleName, death, kill));
 	}
 
 	static public void initialize() 
@@ -72,10 +66,7 @@ public class DeathRules
 				AllDeathMessages.LOGGER.error("The rule name \"{}\" is reserved. The rule defined in the config will be ignored.", ruleName);
 			else {
 				EntityPredicates.put(ruleName, entry.getValue());
-				customRules.put(
-					new MobCategory(ruleName, true, true),
-					entry.getValue()
-				);
+				nameToRule.put(ruleName, new MobCategory(ruleName, true, true));
 			}
 		}
 	}
@@ -92,17 +83,17 @@ public class DeathRules
 
 	@Nullable
 	public static GameRules.Key<BooleanRule>	HasDeathRule(LivingEntity entity){
-		for (var entry : customRules.entrySet())
-			if (IsRuleEnabled(entity.getWorld(), entry.getKey().death) && entry.getValue().test(entity))
-				return entry.getKey().death;
+		for (var entry : nameToRule.entrySet())
+			if (IsRuleEnabled(entity.getWorld(), entry.getValue().death) && EntityPredicates.getOrDefault(entry.getKey()).test(entity))
+				return entry.getValue().death;
 		return null;
 	}
 
 	@Nullable
 	public static GameRules.Key<BooleanRule>	HasKillRule(Entity entity){
-		for (var entry : customRules.entrySet())
-			if (IsRuleEnabled(entity.getWorld(), entry.getKey().kill) && entry.getValue().test(entity))
-				return entry.getKey().kill;
+		for (var entry : nameToRule.entrySet())
+			if (IsRuleEnabled(entity.getWorld(), entry.getValue().death) && EntityPredicates.getOrDefault(entry.getKey()).test(entity))
+				return entry.getValue().kill;
 		return null;
 	}
 
