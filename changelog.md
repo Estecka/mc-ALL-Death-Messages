@@ -33,3 +33,5 @@ Initial release
 - Added `/alldeathmsg test` command to check a mobs categories.
 - Jockeys, mobs in vehicles, and Endermen carrying blocks are no longer considered persistent.
 - The Wither and the Ender Dragon are no longer considered ephemeral.
+### 1.5.2
+- Coordinate tooltip will also show the dimension type.
