@@ -35,3 +35,4 @@ Initial release
 - The Wither and the Ender Dragon are no longer considered ephemeral.
 ### 1.5.2
 - Coordinate tooltip will also show the dimension type.
+- Added `set`, `see-enabled` and `disable-all` commands.
