@@ -1,9 +1,7 @@
 package tk.estecka.alldeath;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.function.Predicate;
 import org.jetbrains.annotations.Nullable;
 import com.google.gson.JsonElement;
@@ -24,9 +22,11 @@ public class DeathRules
 {
 	static public class MobCategory 
 	{
+		public final String name;
 		public final Key<BooleanRule> death;
 		public final Key<BooleanRule> kill;
 		public MobCategory(String name, Boolean deathDefault, Boolean killDefault){
+			this.name = name;
 			this.death = CreateBooleanRule(name+".death", deathDefault);
 			this.kill  = CreateBooleanRule(name+".kill",  killDefault );
 		}
@@ -35,6 +35,9 @@ public class DeathRules
 	static public final String	CONFIG_FILE = "alldeath-rules.json";
 	static private HashMap<MobCategory, Predicate<Entity>> customRules = new HashMap<MobCategory, Predicate<Entity>>();
 
+	static public Iterable<MobCategory> GetRules(){
+		return customRules.keySet();
+	}
 
 	static private Key<BooleanRule>	CreateBooleanRule(String name, boolean defaultValue){
 		return GameRuleRegistry.register("showDeathMessages."+name, Category.CHAT, GameRuleFactory.createBooleanRule(defaultValue));
