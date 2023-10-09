@@ -92,19 +92,29 @@ public class Commands
 	}
 
 	static private int	SeeEnabled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-		final World world = context.getSource().getWorld();
-		final GameRules gamerules = world.getGameRules();
+		final var source = context.getSource();
+		final GameRules gamerules = source.getWorld().getGameRules();
+
+		boolean first = true;
 		for (var rule : DeathRules.nameToRule.entrySet()) {
 			boolean death = gamerules.getBoolean(rule.getValue().death);
 			boolean kill  = gamerules.getBoolean(rule.getValue().kill);
 			if (death || kill){
-				MutableText text = Text.literal(rule.getKey()).append(": ").formatted(Formatting.BOLD);
-				if (death) text.append("death");
+				if (first) {
+					first = false;
+					source.sendFeedback(Text.translatableWithFallback("command.alldeathmsg.see-enabled.success", "Enabled death messages:"), false);
+				}
+				MutableText text = Text.literal("- ").append(rule.getKey()).append(": ");
+				if (death) text.append("Death");
 				if (death && kill) text.append(", ");
-				if (kill ) text.append("kill" );
-				context.getSource().sendFeedback(text, false);
+				if (kill ) text.append("Kill");
+				source.sendFeedback(text, false);
 			}
 		}
+
+		if (first)
+			source.sendFeedback(Text.translatableWithFallback("command.alldeathmsg.see-enabled.dailure", "There are no enabled death messages"), false);
+
 		return 0;
 	}
 
