@@ -11,7 +11,6 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.command.CommandManager.RegistrationEnvironment;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -34,6 +33,7 @@ public class Commands
 	static private final String RULENAME_ARG = "rule name";
 	static private final String RULETYPE_ARG = "rule type";
 	static private final String BOOL_ARG = "boolean";
+	static private final String CONFIRM_ARG = "confirm";
 
 	static public void	Register(){
 		CommandRegistrationCallback.EVENT.register(ID, Commands::RegisterWith);
@@ -53,7 +53,9 @@ public class Commands
 		);
 
 		root.then(literal("disable-all")
-			.executes(Commands::DisableAll)
+			.then(argument(CONFIRM_ARG, bool())
+				.executes(Commands::DisableAll)
+			)
 		);
 
 		root.then(literal("set")
@@ -113,7 +115,7 @@ public class Commands
 		}
 
 		if (first)
-			source.sendFeedback(Text.translatableWithFallback("command.alldeathmsg.see-enabled.dailure", "There are no enabled death messages"), false);
+			source.sendFeedback(Text.translatableWithFallback("command.alldeathmsg.see-enabled.failure", "There are no enabled death messages"), false);
 
 		return 0;
 	}
@@ -122,6 +124,11 @@ public class Commands
 		final World world = context.getSource().getWorld();
 		final GameRules gamerules = world.getGameRules();
 		final MinecraftServer server = world.getServer();
+		if (!getBool(context, CONFIRM_ARG)){
+			context.getSource().sendError(Text.translatableWithFallback("command.alldeathmsg.disable-all.failure", "Command requires confirmation"));
+			return -1;
+		}
+
 		for (var rule : DeathRules.nameToRule.values()) {
 			gamerules.get(rule.death).set(false, server);
 			gamerules.get(rule.kill ).set(false, server);
