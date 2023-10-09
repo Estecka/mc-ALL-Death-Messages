@@ -21,11 +21,12 @@ public abstract class EntityMixin
 
 		BlockPos pos = entity.getBlockPos();
 		var world = entity.getWorld().getRegistryKey().getValue();
-		String addendum = String.format(" (%s) in %s", pos.toShortString(), world.toString());
+		MutableText addendum = Text.translatableWithFallback("gui.alldeath.entity_tooltip.location", "(%s) in %s", pos.toShortString(), world.toString());
 			
 		MutableText text = Text.empty();
 		text.append(entityName);
-		text.append(Text.literal(addendum).formatted(Formatting.GRAY));
+		text.append(" ");
+		text.append(addendum.formatted(Formatting.GRAY));
 
 		return text;
 	}

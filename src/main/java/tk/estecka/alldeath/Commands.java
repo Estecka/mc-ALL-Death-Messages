@@ -39,27 +39,23 @@ public class Commands
 	}
 
 	static public void RegisterWith(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, RegistrationEnvironment env){
-		var root = literal("alldeathmsg");
+		var root = literal("alldeathmsg").requires(s->s.hasPermissionLevel(2));
 
 		root.then(literal("test")
-			.requires(s -> s.hasPermissionLevel(1))
 			.then(argument(ENTITY_ARG, entities())
 				.executes(Commands::TestEntities)
 			)
 		);
 
 		root.then(literal("see-enabled")
-			.requires(s -> s.hasPermissionLevel(1))
 			.executes(Commands::SeeEnabled)
 		);
 
 		root.then(literal("disable-all")
-			.requires(s -> s.hasPermissionLevel(2))
 			.executes(Commands::DisableAll)
 		);
 
 		root.then(literal("set")
-			.requires(s -> s.hasPermissionLevel(2))
 			.then(argument(RULENAME_ARG, string())
 				.then(argument(RULETYPE_ARG, string())
 					.executes(Commands::SetRule)
@@ -117,6 +113,7 @@ public class Commands
 			gamerules.get(rule.death).set(false, server);
 			gamerules.get(rule.kill ).set(false, server);
 		}
+		context.getSource().sendFeedback(Text.translatableWithFallback("command.alldeathmsg.disable-all.success", "Disabled all death messages"), true);
 		return 1;
 	}
 
