@@ -1,4 +1,9 @@
 {
+	"command.alldeathmsg.disable-all.failure": "Command requires confirmation",
+	"command.alldeathmsg.disable-all.success": "Disabled all death messages",
+	"command.alldeathmsg.see-enabled.failure": "There are no enabled death messages",
+	"command.alldeathmsg.see-enabled.success": "Enabled death messages:",
+	"command.alldeathmsg.set.failure": "Invalid rule name: %s.%s",
 	"gamerule.showDeathCoordinates": "Show death coordinates",
 	"gamerule.showDeathCoordinates.description": "Advanced tooltip will show an entity's coordinate, when hovering its name in the chat.",
 	"gamerule.showDeathMessages.all.death": "Show ALL Death Messages",
@@ -24,5 +29,6 @@
 	"gamerule.showDeathMessages.persistent.death": "Show persistent mobs deathes",
 	"gamerule.showDeathMessages.persistent.kill":  "Show persistent mobs kills",
 	"gamerule.showDeathMessages.persistent.death.description": "Mobs that cannot naturally despawn",
-	"gamerule.showDeathMessages.persistent.kill.description":  "Mobs that cannot naturally despawn"
+	"gamerule.showDeathMessages.persistent.kill.description":  "Mobs that cannot naturally despawn",
+	"gui.alldeath.entity_tooltip.location": "(%s) in %s"
 }

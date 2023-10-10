@@ -19,7 +19,7 @@ A mob may belong to multiple categories; it will trigger a death message if at l
 - `persistent`: Mobs that will not naturally despawn.
 - `ephemeral`: The negation of `persistent`
 - `hostile`: Mobs treated as hostile by the game's code.
-- `passive`: Mobs treated as passive by the game's code. This is _not_ the negation of `hostile; some mobs are neither hostile nor passive.
+- `passive`: Mobs treated as passive by the game's code. This is _not_ the negation of `hostile`; some mobs are neither hostile nor passive.
 
 ### Custom categories
 Custom categories are defined in `.minecraft/config/alldeath-rules.json`.
@@ -90,3 +90,12 @@ The topmost style defines an anonymous category for entities of type "player". T
 Players also belong to the "named" category, so both styles will be applied to a Player's name:  
 The "italic" property is taken from the topmost style; player names will not be italicized.  
 The topmost style does not define a "underline" property, so the lower property is used, and player names will be underlined.
+
+## Commands
+
+`/alldeathmsg` is the root for all subcommands. It requires a permision level of at least 2.
+
+- `test <entities>` Checks which rules apply to the given entities, and preview their styled name.
+- `see-enabled` Lists all currently enabled rules
+- `disable-all <confirm>` Disables all death message rules.
+- `set <rule name> <rule type> <boolean>` Equivalent to the `gamerule` command, but with a more convenient auto-complete.
