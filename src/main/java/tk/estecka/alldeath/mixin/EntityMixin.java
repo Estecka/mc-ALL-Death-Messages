@@ -19,14 +19,14 @@ public abstract class EntityMixin
 		if (!entity.getWorld().getGameRules().getBoolean(AllDeathMessages.COORD_RULE))
 			return entityName;
 
-		MutableText text = Text.empty();
 		BlockPos pos = entity.getBlockPos();
-
+		var world = entity.getWorld().getRegistryKey().getValue();
+		MutableText addendum = Text.translatableWithFallback("gui.alldeath.entity_tooltip.location", "(%s) in %s", pos.toShortString(), world.toString());
+			
+		MutableText text = Text.empty();
 		text.append(entityName);
-		text.append(
-			Text.literal(String.format(" (%s)", pos.toShortString()))
-			    .formatted(Formatting.GRAY)
-		);
+		text.append(" ");
+		text.append(addendum.formatted(Formatting.GRAY));
 
 		return text;
 	}
