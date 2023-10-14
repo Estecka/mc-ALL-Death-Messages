@@ -92,7 +92,7 @@ public class DeathRules
 	@Nullable
 	public static GameRules.Key<BooleanRule>	HasKillRule(Entity entity){
 		for (var entry : nameToRule.entrySet())
-			if (IsRuleEnabled(entity.getWorld(), entry.getValue().death) && EntityPredicates.getOrDefault(entry.getKey()).test(entity))
+			if (IsRuleEnabled(entity.getWorld(), entry.getValue().kill) && EntityPredicates.getOrDefault(entry.getKey()).test(entity))
 				return entry.getValue().kill;
 		return null;
 	}

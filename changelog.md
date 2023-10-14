@@ -36,3 +36,5 @@ Initial release
 ### 1.5.2
 - Coordinate tooltip will also show the dimension type.
 - Added `set`, `see-enabled` and `disable-all` commands.
+### 1.5.3
+- Fixed Kill messages being wrongly associated with Death rules.
