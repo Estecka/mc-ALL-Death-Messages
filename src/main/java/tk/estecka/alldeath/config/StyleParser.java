@@ -100,7 +100,7 @@ public class StyleParser
 		}
 
 		String colourString = elt.getAsString();
-		TextColor c = TextColor.parse(colourString);
+		TextColor c = TextColor.parse(colourString).result().orElseGet(()->null);
 		if (c == null)
 			AllDeathMessages.LOGGER.error("Invalid colour name: {}", colourString);
 		return c;
