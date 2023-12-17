@@ -38,3 +38,7 @@ Initial release
 - Added `set`, `see-enabled` and `disable-all` commands.
 ### 1.5.3
 - Fixed Kill messages being wrongly associated with Death rules.
+### 1.5.4
+- Updated compatible minecraft versions in mod's metadata
+### 1.5.5
+- Fixed text-siblings being stripped from mob names upon styling.
