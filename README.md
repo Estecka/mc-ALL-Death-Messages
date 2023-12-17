@@ -5,7 +5,7 @@ Enables death messages for any entity you want.
 
 Specific categories of mobs can be defined in a config file, and their names in the messages can be styled with different colours and effects.
 
-For each category, separate `kill` and `death` gamerules or generated.
+For each category, separate `kill` and `death` gamerules are generated.
 
 ## Message Triggers
 
