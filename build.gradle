@@ -46,6 +46,8 @@ processResources {
 	filesMatching("fabric.mod.json") {
 		expand "version": project.version
 	}
+
+	exclude "**/*.xcf"
 }
 
 tasks.withType(JavaCompile).configureEach {

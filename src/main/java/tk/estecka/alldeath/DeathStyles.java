@@ -70,7 +70,7 @@ public class DeathStyles
 		if (deathStyle.strike    != null) textStyle=textStyle.withStrikethrough(deathStyle.strike   );
 		if (deathStyle.cursed    != null) textStyle=textStyle.withObfuscated   (deathStyle.cursed   );
 
-		return MutableText.of(name.getContent()).setStyle(textStyle);
+		return name.copy().setStyle(textStyle);
 	}
 
 	static public void initialize() {

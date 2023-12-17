@@ -4,7 +4,7 @@
 	"version": "${version}",
 
 	"name": "ALL Death Messages",
-	"description": "Configurable death messages for any entity.",
+	"description": "Configurable death messages for any mob.",
 	"authors": [
 		"Estecka"
 	],
@@ -33,6 +33,5 @@
 		"java": ">=17"
 	},
 	"suggests": {
-		"another-mod": "*"
 	}
 }
