@@ -42,3 +42,5 @@ Initial release
 - Updated compatible minecraft versions in mod's metadata
 ### 1.5.5
 - Fixed text-siblings being stripped from mob names upon styling.
+### 1.5.6
+- Changed gamerule categories to better fit Cloth-Gamerules
