@@ -7,7 +7,6 @@ import java.util.function.Predicate;
 import org.jetbrains.annotations.Nullable;
 import com.google.gson.JsonElement;
 import net.minecraft.entity.Entity;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;

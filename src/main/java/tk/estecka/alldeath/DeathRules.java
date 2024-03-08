@@ -5,10 +5,13 @@ import java.util.HashMap;
 import java.util.function.Predicate;
 import org.jetbrains.annotations.Nullable;
 import com.google.gson.JsonElement;
+import net.fabricmc.fabric.api.gamerule.v1.CustomGameRuleCategory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.GameRules.BooleanRule;
@@ -16,25 +19,28 @@ import net.minecraft.world.GameRules.Category;
 import net.minecraft.world.GameRules.Key;
 import tk.estecka.alldeath.config.RuleParser;
 import tk.estecka.alldeath.config.JsonConfig;
+import static tk.estecka.alldeath.AllDeathMessages.MODID;
 
 
 public class DeathRules
 {
-	static public class MobCategory 
+	static public class MobCategory
 	{
 		public final Key<BooleanRule> death;
 		public final Key<BooleanRule> kill;
 		public MobCategory(String name, Boolean deathDefault, Boolean killDefault){
-			this.death = CreateBooleanRule(name+".death", deathDefault);
-			this.kill  = CreateBooleanRule(name+".kill",  killDefault );
+			this.death = CreateBooleanRule(DEATH_CATEGORY, name, deathDefault);
+			this.kill  = CreateBooleanRule(KILL_CATEGORY,  name, killDefault );
 		}
 	}
 
 	static public final String	CONFIG_FILE = "alldeath-rules.json";
 	static public final HashMap<String,MobCategory> nameToRule = new HashMap<>();
+	static public final CustomGameRuleCategory DEATH_CATEGORY = new CustomGameRuleCategory(new Identifier(MODID, "death"), Text.translatable("gamerule.category.alldeath.death"));
+	static public final CustomGameRuleCategory KILL_CATEGORY  = new CustomGameRuleCategory(new Identifier(MODID, "kill" ), Text.translatable("gamerule.category.alldeath.kill" ));
 
-	static private Key<BooleanRule>	CreateBooleanRule(String name, boolean defaultValue){
-		return GameRuleRegistry.register("showDeathMessages."+name, Category.CHAT, GameRuleFactory.createBooleanRule(defaultValue));
+	static private Key<BooleanRule>	CreateBooleanRule(CustomGameRuleCategory category, String name, boolean defaultValue){
+		return GameRuleRegistry.register("showDeathMessages."+name+"."+category.getId().getPath(), category, GameRuleFactory.createBooleanRule(defaultValue));
 	}
 
 	static private void	InitializeBuiltinRule(String ruleName, boolean death, boolean kill){
@@ -50,7 +56,7 @@ public class DeathRules
 		InitializeBuiltinRule("hostile"   , false, false);
 		InitializeBuiltinRule("passive"   , false, false);
 
-		JsonConfig configFile = new JsonConfig(CONFIG_FILE, AllDeathMessages.MODID, AllDeathMessages.LOGGER);
+		JsonConfig configFile = new JsonConfig(CONFIG_FILE, MODID, AllDeathMessages.LOGGER);
 		JsonElement json;
 		try {
 			json = configFile.GetOrCreateJsonFile();
