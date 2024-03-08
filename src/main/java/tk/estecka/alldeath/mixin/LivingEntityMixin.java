@@ -43,7 +43,7 @@ public abstract class LivingEntityMixin
 
 		if (rule == null) {
 			for (DamageRecord dmg : ((IDamageTrackerMixin)damages).getRecentDamage())
-				if ((rulingEntity=dmg.getAttacker()) != null && (rule=DeathRules.HasKillRule(rulingEntity)) != null)
+				if ((rulingEntity=dmg.getDamageSource().getAttacker()) != null && (rule=DeathRules.HasKillRule(rulingEntity)) != null)
 					break;
 		}
 
