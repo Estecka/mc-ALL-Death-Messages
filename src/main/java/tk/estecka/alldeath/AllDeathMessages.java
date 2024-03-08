@@ -8,7 +8,8 @@ import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.BooleanRule;
 
-public class AllDeathMessages implements ModInitializer
+public class AllDeathMessages
+implements ModInitializer
 {
 	static public final String MODID = "alldeathmessages";
 	static public final Logger LOGGER = LoggerFactory.getLogger("AllDeath");

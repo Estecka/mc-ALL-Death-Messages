@@ -1,6 +1,7 @@
 package tk.estecka.alldeath.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -10,6 +11,7 @@ import net.minecraft.entity.damage.DamageTracker;
 import net.minecraft.text.Text;
 import tk.estecka.alldeath.DeathStyles;
 
+@Unique
 @Mixin(DamageTracker.class)
 public abstract class DamageTrackerMixin 
 {

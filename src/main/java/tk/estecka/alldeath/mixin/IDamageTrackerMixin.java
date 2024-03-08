@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(DamageTracker.class)
-public interface IDamageTrackerMixin {
+public interface IDamageTrackerMixin
+{
 	@Accessor public List<DamageRecord>	getRecentDamage();
 }
