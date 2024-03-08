@@ -12,10 +12,12 @@ import net.minecraft.text.Text;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.BooleanRule;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@Unique
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin 
 {
@@ -43,7 +45,7 @@ public abstract class LivingEntityMixin
 
 		if (rule == null) {
 			for (DamageRecord dmg : ((IDamageTrackerMixin)damages).getRecentDamage())
-				if ((rulingEntity=dmg.getAttacker()) != null && (rule=DeathRules.HasKillRule(rulingEntity)) != null)
+				if ((rulingEntity=dmg.getDamageSource().getAttacker()) != null && (rule=DeathRules.HasKillRule(rulingEntity)) != null)
 					break;
 		}
 
