@@ -11,11 +11,11 @@ import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.GameRules.BooleanRule;
-import net.minecraft.world.GameRules.Category;
 import net.minecraft.world.GameRules.Key;
 import tk.estecka.alldeath.config.RuleParser;
 import tk.estecka.alldeath.config.JsonConfig;
@@ -36,8 +36,8 @@ public class DeathRules
 
 	static public final String	CONFIG_FILE = "alldeath-rules.json";
 	static public final HashMap<String,MobCategory> nameToRule = new HashMap<>();
-	static public final CustomGameRuleCategory DEATH_CATEGORY = new CustomGameRuleCategory(new Identifier(MODID, "death"), Text.translatable("gamerule.category.alldeath.death"));
-	static public final CustomGameRuleCategory KILL_CATEGORY  = new CustomGameRuleCategory(new Identifier(MODID, "kill" ), Text.translatable("gamerule.category.alldeath.kill" ));
+	static public final CustomGameRuleCategory DEATH_CATEGORY = new CustomGameRuleCategory(new Identifier(MODID, "death"), Text.translatable("gamerule.category.alldeath.death").formatted(Formatting.BOLD, Formatting.YELLOW));
+	static public final CustomGameRuleCategory KILL_CATEGORY  = new CustomGameRuleCategory(new Identifier(MODID, "kill" ), Text.translatable("gamerule.category.alldeath.kill" ).formatted(Formatting.BOLD, Formatting.YELLOW));
 
 	static private Key<BooleanRule>	CreateBooleanRule(CustomGameRuleCategory category, String name, boolean defaultValue){
 		return GameRuleRegistry.register("showDeathMessages."+name+"."+category.getId().getPath(), category, GameRuleFactory.createBooleanRule(defaultValue));
