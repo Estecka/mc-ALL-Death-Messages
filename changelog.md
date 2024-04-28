@@ -39,8 +39,10 @@ Initial release
 ### 1.5.3
 - Fixed Kill messages being wrongly associated with Death rules.
 ### 1.5.4
-- Updated compatible minecraft versions in mod's metadata
+- Updated for 1.20.3
 ### 1.5.5
 - Fixed text-siblings being stripped from mob names upon styling.
 ### 1.5.6
 - Changed gamerule categories to better fit Cloth-Gamerules
+### 1.5.7
+- Updated for 1.20.5

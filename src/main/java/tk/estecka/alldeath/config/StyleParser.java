@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
+import com.mojang.serialization.JsonOps;
 import net.minecraft.entity.Entity;
 import net.minecraft.text.TextColor;
 import tk.estecka.alldeath.AllDeathMessages;
@@ -94,16 +94,11 @@ public class StyleParser
 		JsonElement elt = parent.get("color");
 		if (elt.isJsonNull())
 			return null;
-		if (!elt.isJsonPrimitive() || !elt.getAsJsonPrimitive().isString()){
-			AllDeathMessages.LOGGER.error("Invalid colour format: {}", elt);
-			return null;
-		}
 
-		String colourString = elt.getAsString();
-		TextColor c = TextColor.parse(colourString);
-		if (c == null)
-			AllDeathMessages.LOGGER.error("Invalid colour name: {}", colourString);
-		return c;
+		return TextColor.CODEC.parse(JsonOps.INSTANCE, elt)
+			.resultOrPartial(AllDeathMessages.LOGGER::error)
+			.orElse(null)
+			;
 	}
 
 	static private Boolean	GetOptionalBool(JsonObject parent, String keyName){
