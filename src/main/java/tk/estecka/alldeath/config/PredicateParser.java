@@ -32,7 +32,7 @@ public class PredicateParser {
 	}
 
 	static private void	SpellCheck(String typeName){
-		Identifier id = new Identifier(typeName);
+		Identifier id = Identifier.validate(typeName).getOrThrow();
 		if(id.getNamespace().equals("minecraft") && !Registries.ENTITY_TYPE.containsId(id))
 			AllDeathMessages.LOGGER.warn("The type \"{}\" does not exist in vanilla minecraft", id);
 	}

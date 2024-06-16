@@ -36,8 +36,8 @@ public class DeathRules
 
 	static public final String	CONFIG_FILE = "alldeath-rules.json";
 	static public final HashMap<String,MobCategory> nameToRule = new HashMap<>();
-	static public final CustomGameRuleCategory DEATH_CATEGORY = new CustomGameRuleCategory(new Identifier(MODID, "death"), Text.translatable("gamerule.category.alldeath.death").formatted(Formatting.BOLD, Formatting.YELLOW));
-	static public final CustomGameRuleCategory KILL_CATEGORY  = new CustomGameRuleCategory(new Identifier(MODID, "kill" ), Text.translatable("gamerule.category.alldeath.kill" ).formatted(Formatting.BOLD, Formatting.YELLOW));
+	static public final CustomGameRuleCategory DEATH_CATEGORY = new CustomGameRuleCategory(Identifier.of(MODID, "death"), Text.translatable("gamerule.category.alldeath.death").formatted(Formatting.BOLD, Formatting.YELLOW));
+	static public final CustomGameRuleCategory KILL_CATEGORY  = new CustomGameRuleCategory(Identifier.of(MODID, "kill" ), Text.translatable("gamerule.category.alldeath.kill" ).formatted(Formatting.BOLD, Formatting.YELLOW));
 
 	static private Key<BooleanRule>	CreateBooleanRule(CustomGameRuleCategory category, String name, boolean defaultValue){
 		return GameRuleRegistry.register("showDeathMessages."+name+"."+category.getId().getPath(), category, GameRuleFactory.createBooleanRule(defaultValue));

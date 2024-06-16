@@ -31,7 +31,7 @@ import static net.minecraft.command.argument.EntityArgumentType.getEntities;
 
 public class Commands 
 {
-	static public final Identifier ID = new Identifier("alldeath", "command");
+	static public final Identifier ID = Identifier.of("alldeath", "command");
 	static private final String ENTITY_ARG = "entity";
 	static private final String RULENAME_ARG = "rule name";
 	static private final String RULETYPE_ARG = "rule type";
