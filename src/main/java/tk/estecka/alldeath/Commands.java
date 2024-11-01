@@ -139,8 +139,8 @@ public class Commands
 
 	static private int	DisableAll(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 		final World world = context.getSource().getWorld();
-		final GameRules gamerules = world.getGameRules();
 		final MinecraftServer server = world.getServer();
+		final GameRules gamerules = server.getGameRules();
 		if (!getBool(context, CONFIRM_ARG)){
 			context.getSource().sendError(Text.translatableWithFallback("command.alldeathmsg.disable-all.failure", "Command requires confirmation"));
 			return -1;
@@ -160,8 +160,8 @@ public class Commands
 	}
 
 	static private int	SetRule(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-		final World world = context.getSource().getWorld();
-		final GameRules gamerules = world.getGameRules();
+		final MinecraftServer server = context.getSource().getServer();
+		final GameRules gamerules = server.getGameRules();
 
 		String ruleName = getString(context, RULENAME_ARG);
 		String ruleType = getString(context, RULETYPE_ARG);
@@ -179,7 +179,7 @@ public class Commands
 		}
 
 		BooleanRule rule = gamerules.get(ruleKey);
-		rule.set(value, world.getServer());
+		rule.set(value, server);
 		context.getSource().sendFeedback(()->Text.translatable("commands.gamerule.set", ruleKey.getName(), rule.toString()), true);
 		return 1;
 	}

@@ -18,7 +18,7 @@ public abstract class EntityMixin
 	@ModifyArg( method="getHoverEvent", index=2, at=@At(value="INVOKE", target="net/minecraft/text/HoverEvent$EntityContent.<init> (Lnet/minecraft/entity/EntityType;Ljava/util/UUID;Lnet/minecraft/text/Text;)V"))
 	private Text	alldeath$PosInsertion(Text entityName){
 		Entity entity = (Entity)(Object)this;
-		if (!entity.getWorld().getGameRules().getBoolean(AllDeathMessages.COORD_RULE))
+		if (entity.getWorld().isClient() || !entity.getServer().getGameRules().getBoolean(AllDeathMessages.COORD_RULE))
 			return entityName;
 
 		BlockPos pos = entity.getBlockPos();

@@ -23,7 +23,7 @@ public abstract class LivingEntityMixin
 {
 	private static boolean	alldeath$ShouldHandleEntityDeath(LivingEntity entity){
 		return !entity.getWorld().isClient()
-			&& DeathRules.IsRuleEnabled(entity.getWorld(), GameRules.SHOW_DEATH_MESSAGES)
+			&& DeathRules.IsRuleEnabled(entity.getServer(), GameRules.SHOW_DEATH_MESSAGES)
 			;
 	}
 
@@ -54,7 +54,7 @@ public abstract class LivingEntityMixin
 			dyingEntity.getWorld().getServer().sendMessage(msg);
 			for (ServerPlayerEntity player : dyingEntity.getWorld().getServer().getPlayerManager().getPlayerList())
 			if  (player != owner)
-				player.sendMessage(msg);
+				player.sendMessageToClient(msg, false);
 			AllDeathMessages.LOGGER.info("Death message triggered by {} ({}) using rule {}", rulingEntity.getName().getString(), rulingEntity.getType(), rule);
 		}
 	}
