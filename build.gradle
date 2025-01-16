@@ -23,7 +23,7 @@ loom {
 		client {
 			configName "Client"
 			programArgs "--username"
-			programArgs "Dev"
+			programArgs "Player"
 			runDir "run/client"
 		}
 		server {
