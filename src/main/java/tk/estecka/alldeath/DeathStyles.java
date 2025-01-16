@@ -78,7 +78,7 @@ public class DeathStyles
 		try {
 			json = configFile.GetOrCreateJsonFile();
 		} catch (IOException e){
-			AllDeathMessages.LOGGER.error("Unable to load config file: {}", CONFIG_FILE);
+			AllDeathMessages.LOGGER.error("Unable to load config file: {}\n {}", CONFIG_FILE, e.toString());
 			return;
 		}
 
