@@ -40,7 +40,7 @@ public class EntityPredicates {
 		if (entity instanceof WitherEntity || entity instanceof EnderDragonEntity)
 			return true;
 
-		if (!(entity instanceof MobEntity mob) || entity instanceof PlayerEntity)
+		if (!(entity instanceof MobEntity mob))
 			return false;
 
 		return mob.isPersistent()

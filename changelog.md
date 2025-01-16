@@ -53,10 +53,11 @@ Initial release
 
 ## 1.6
 - Players are no longer included in any built-in mob category.
+- Added a "Player" category
+- Added a "Tamed" category
 - "Hostile" category is now based on whether the mob is allowed in Peaceful difficulty. "Passive" is now the complementary of "Hostile".
 	- Phantoms, Simes, and Magma Cubes are now considered hostile.
 	- Squids, fish, and Snow Golems are now considered passive.
 	- Piglins (except brutes) are now passive instead of hostile.
 - "Utility" now includes snow golems.
-- Added a "Tamed" category
 - Added a `reload-styles` command.
