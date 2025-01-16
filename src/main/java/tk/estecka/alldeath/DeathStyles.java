@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import org.jetbrains.annotations.Nullable;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonSyntaxException;
 import net.minecraft.entity.Entity;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -72,17 +73,18 @@ public class DeathStyles
 		return name.copy().setStyle(textStyle);
 	}
 
-	static public void initialize() {
-		JsonConfig configFile = new JsonConfig(CONFIG_FILE, AllDeathMessages.MODID, AllDeathMessages.LOGGER);
+	static public boolean initialize() {
 		JsonElement json;
 		try {
+			JsonConfig configFile = new JsonConfig(CONFIG_FILE, AllDeathMessages.MODID, AllDeathMessages.LOGGER);
 			json = configFile.GetOrCreateJsonFile();
-		} catch (IOException e){
+		} catch (IOException|JsonSyntaxException e){
 			AllDeathMessages.LOGGER.error("Unable to load config file: {}\n {}", CONFIG_FILE, e.toString());
-			return;
+			return false;
 		}
 
 		STYLES.addAll(StyleParser.CreateConfigFromJson(json));
+		return true;
 	}
 
 }

@@ -55,6 +55,10 @@ public class Commands
 			.executes(Commands::SeeEnabled)
 		);
 
+		root.then(literal("reload-styles")
+			.executes(Commands::ReloadStyles)
+		);
+
 		root.then(literal("disable-all")
 			.then(argument(CONFIRM_ARG, bool())
 				.executes(Commands::DisableAll)
@@ -108,6 +112,18 @@ public class Commands
 		}
 
 		return 0;
+	}
+
+	static private int	ReloadStyles(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+		DeathStyles.STYLES.clear();
+		if (DeathStyles.initialize()) {
+			context.getSource().sendFeedback(()->Text.literal("Styles reloaded"), true);
+			return 1;
+		}
+		else{
+			context.getSource().sendError(Text.literal("Style error"));
+			return -1;
+		}
 	}
 
 	static private int	SeeEnabled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {

@@ -57,5 +57,6 @@ Initial release
 	- Phantoms, Simes, and Magma Cubes are now considered hostile.
 	- Squids, fish, and Snow Golems are now considered passive.
 	- Piglins (except brutes) are now passive instead of hostile.
-- Added a "Tamed" category
 - "Utility" now includes snow golems.
+- Added a "Tamed" category
+- Added a `reload-styles` command.
