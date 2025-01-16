@@ -6,9 +6,8 @@ import java.util.function.Predicate;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.PassiveEntity;
+import tk.estecka.alldeath.mixin.IMobEntityMixin;
 
 public class EntityPredicates {
 	static public final Map<String, Predicate<Entity>>	predicates = new LinkedHashMap<String, Predicate<Entity>>(8){{
@@ -22,8 +21,8 @@ public class EntityPredicates {
 	}};
 
 	static public boolean	NAMED(Entity e) { return e.hasCustomName() || e.isPlayer(); }
-	static public boolean	HOSTILE(Entity e) { return e instanceof HostileEntity; }
-	static public boolean	PASSIVE(Entity e) { return e instanceof PassiveEntity; }
+	static public boolean	HOSTILE(Entity e) { return e instanceof MobEntity mob && ((IMobEntityMixin)mob).callIsDisallowedInPeaceful(); }
+	static public boolean	PASSIVE(Entity e) { return !HOSTILE(e); }
 	static public boolean	EPHEMERAL(Entity e) { return !PERSISTENT(e); }
 	static public boolean	SEMIPERSISTENT(Entity e) { return e instanceof MobEntity mob && mob.cannotDespawn(); }
 

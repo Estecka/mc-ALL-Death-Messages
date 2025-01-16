@@ -7,6 +7,7 @@
 		"DamageTrackerMixin",
 		"EntityMixin",
 		"IDamageTrackerMixin",
+		"IMobEntityMixin",
 		"LivingEntityMixin"
 	],
 	"client": [
