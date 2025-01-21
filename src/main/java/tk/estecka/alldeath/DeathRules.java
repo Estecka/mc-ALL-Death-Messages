@@ -49,8 +49,10 @@ public class DeathRules
 
 	static public void initialize() 
 	{
-		InitializeBuiltinRule("all"       , false, true );
+		InitializeBuiltinRule("all"       , false, false);
+		InitializeBuiltinRule("player"    , true , false);
 		InitializeBuiltinRule("named"     , true , true );
+		InitializeBuiltinRule("tamed"     , true , true );
 		InitializeBuiltinRule("persistent", true , false);
 		InitializeBuiltinRule("ephemeral" , false, false);
 		InitializeBuiltinRule("hostile"   , false, false);

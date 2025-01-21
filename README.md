@@ -1,25 +1,23 @@
 # All Death Messages
 
 ## Overview
-Enables death messages for any entity you want.
+Enables death messages for configurable categories of mobs, and style their names with different colours and effects.
 
-Specific categories of mobs can be defined in a config file, and their names in the messages can be styled with different colours and effects.
-
-For each category, separate `kill` and `death` gamerules are generated.
+Categories are defined in a config file. For each category, separate `kill` and `death` gamerules are generated.
 
 ## Message Triggers
 
-There is a handful of built-in categories based on mob preoperties, and custom ones can be created in the config based on entity types.
+There is a handful of built-in categories based on mob properties. Custom categories can be created in a config file based on entity types.
 
 A mob may belong to multiple categories; it will trigger a death message if any of them has its rule enabled.
 
 ### Built-in categories
 - `all`: Applies to everything. When enabled, this overrules all other categories.
-- `named`: Mobs that have been given a custom name, including all players.
-- `persistent`: Mobs that will not naturally despawn.
-- `ephemeral`: The negation of `persistent`
-- `hostile`: Mobs treated as hostile by the game's code.
-- `passive`: Mobs treated as passive by the game's code. This is _not_ the negation of `hostile`; some mobs are neither hostile nor passive.
+- `player`: Players are excluded from other categories below.
+- `named`: Mobs that have been given a custom name.
+- `tamed`: Both tamed pets and tamed mounts.
+- `ephemeral`/`persistent`: Mobs that will/won't naturally despawn.
+- `hostile`/`passive`: Mobs that are allowed/disallowed in Peaceful difficulty.
 
 ### Custom categories
 Custom categories are defined in `.minecraft/config/alldeath-rules.json`.
@@ -32,6 +30,7 @@ This example is provided as the default config file:
 	"utility": [
 		"minecraft:allay",
 		"minecraft:iron_golem",
+		"minecraft:snow_golem",
 		"minecraft:villager",
 		"minecraft:wandering_trader"
 	],
@@ -99,3 +98,4 @@ The topmost style does not define a "underline" property, so the lower property 
 - `see-enabled` Lists all currently enabled rules
 - `disable-all <confirm>` Disables all death message rules.
 - `set <rule name> <rule type> <boolean>` Equivalent to the `gamerule` command, but with a more convenient auto-complete.
+- `reload-styles` Reloads styles from theis config file.

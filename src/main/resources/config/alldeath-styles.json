@@ -22,6 +22,10 @@
 		"bold": true
 	},
 	{
+		"rule": "tamed",
+		"color":"#00ffcc"
+	},
+	{
 		"rule": "hostile",
 		"color":"#ff6666"
 	},

@@ -1,4 +1,5 @@
-# Minecraft Code Breaking Changes
+# Minecraft Versions Breaking Changes
+
 ## 1.19.4
 Initial Release
 
@@ -8,7 +9,9 @@ Initial Release
 - `DamageRecord::getAttacker` was removed. No code change is required: use `DamageRecord::getDamageSource` instead.
 - An additional LivingEntity name needs to be styled in `DamageTracker::getAttackedFallDeathMessage` and `DamageTracker::getFallDeathMessage`
 - An additional Entity name needs to be styled in `DamageTracker::getDisplayName`
-- `DamageRecord:getAttackerName` no longer needs to be styled in `DamageTracker::getDeathMessage`
+- `DamageRecord::getAttackerName` no longer needs to be styled in `DamageTracker::getDeathMessage`
+#### Worked around:
+- `DamageRecord::getAttacker` was removed. Use `DamageRecord::getDamageSource` instead.
 
 ## 1.20.3
 ### Worked around:

@@ -7,7 +7,9 @@
 		"DamageTrackerMixin",
 		"EntityMixin",
 		"IDamageTrackerMixin",
-		"LivingEntityMixin"
+		"IMobEntityMixin",
+		"LivingEntityMixin",
+		"ServerPlayerEntityMixin"
 	],
 	"client": [
 	],

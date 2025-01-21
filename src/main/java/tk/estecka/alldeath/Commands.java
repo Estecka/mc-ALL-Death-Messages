@@ -28,6 +28,7 @@ import static net.minecraft.server.command.CommandManager.literal;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.command.argument.EntityArgumentType.entities;
 import static net.minecraft.command.argument.EntityArgumentType.getEntities;
+import static tk.estecka.alldeath.AllDeathMessages.ServersideTranslatable;
 
 public class Commands 
 {
@@ -53,6 +54,10 @@ public class Commands
 
 		root.then(literal("see-enabled")
 			.executes(Commands::SeeEnabled)
+		);
+
+		root.then(literal("reload-styles")
+			.executes(Commands::ReloadStyles)
 		);
 
 		root.then(literal("disable-all")
@@ -110,6 +115,18 @@ public class Commands
 		return 0;
 	}
 
+	static private int	ReloadStyles(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+		DeathStyles.STYLES.clear();
+		if (DeathStyles.initialize()) {
+			context.getSource().sendFeedback(()->ServersideTranslatable("command.alldeathmsg.reload-styles.success"), true);
+			return 1;
+		}
+		else {
+			context.getSource().sendError(ServersideTranslatable("command.alldeathmsg.reload-styles.failure"));
+			return -1;
+		}
+	}
+
 	static private int	SeeEnabled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 		final var source = context.getSource();
 		final GameRules gamerules = source.getWorld().getGameRules();
@@ -121,7 +138,7 @@ public class Commands
 			if (death || kill){
 				if (first) {
 					first = false;
-					source.sendFeedback(()->Text.translatableWithFallback("command.alldeathmsg.see-enabled.success", "Enabled death messages:"), false);
+					source.sendFeedback(()->ServersideTranslatable("command.alldeathmsg.see-enabled.success"), false);
 				}
 				MutableText text = Text.literal("- ").append(rule.getKey()).append(": ");
 				if (death) text.append("Death");
@@ -132,7 +149,7 @@ public class Commands
 		}
 
 		if (first)
-			source.sendFeedback(()->Text.translatableWithFallback("command.alldeathmsg.see-enabled.failure", "There are no enabled death messages"), false);
+			source.sendFeedback(()->ServersideTranslatable("command.alldeathmsg.see-enabled.failure"), false);
 
 		return 0;
 	}
@@ -142,7 +159,7 @@ public class Commands
 		final MinecraftServer server = world.getServer();
 		final GameRules gamerules = server.getGameRules();
 		if (!getBool(context, CONFIRM_ARG)){
-			context.getSource().sendError(Text.translatableWithFallback("command.alldeathmsg.disable-all.failure", "Command requires confirmation"));
+			context.getSource().sendError(ServersideTranslatable("command.alldeathmsg.disable-all.failure"));
 			return -1;
 		}
 
@@ -150,12 +167,12 @@ public class Commands
 			gamerules.get(rule.death).set(false, server);
 			gamerules.get(rule.kill ).set(false, server);
 		}
-		context.getSource().sendFeedback(()->Text.translatableWithFallback("command.alldeathmsg.disable-all.success", "Disabled all death messages"), true);
+		context.getSource().sendFeedback(()->ServersideTranslatable("command.alldeathmsg.disable-all.success"), true);
 		return 1;
 	}
 
 	static private int	SetRuleFailure(CommandContext<ServerCommandSource> context, String ruleName, String ruleType){
-		context.getSource().sendError(Text.translatableWithFallback("command.alldeathmsg.set.failure", "Invalid rule name: %s.%s", ruleName, ruleType));
+		context.getSource().sendError(ServersideTranslatable("command.alldeathmsg.set.failure", ruleName, ruleType));
 		return -1;
 	}
 

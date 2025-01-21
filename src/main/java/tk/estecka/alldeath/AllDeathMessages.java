@@ -5,6 +5,9 @@ import org.slf4j.LoggerFactory;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.util.Language;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.BooleanRule;
 
@@ -21,5 +24,10 @@ implements ModInitializer
 		DeathRules.initialize();
 		DeathStyles.initialize();
 		Commands.Register();
+	}
+
+	static public MutableText ServersideTranslatable(String key, Object ... args){
+		String fallback = Language.getInstance().get(key);
+		return Text.translatableWithFallback(key, fallback, args);
 	}
 }

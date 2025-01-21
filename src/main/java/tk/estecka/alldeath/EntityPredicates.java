@@ -4,26 +4,35 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.Tameable;
 import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import tk.estecka.alldeath.mixin.IMobEntityMixin;
 
 public class EntityPredicates {
 	static public final Map<String, Predicate<Entity>>	predicates = new LinkedHashMap<String, Predicate<Entity>>(8){{
 		put( "all", e->true );
-		put( "named",      EntityPredicates::NAMED      );
-		put( "persistent", EntityPredicates::PERSISTENT );
-		put( "hostile",    EntityPredicates::HOSTILE    );
-		put( "passive",    EntityPredicates::PASSIVE    );
-		put( "ephemeral",  EntityPredicates::EPHEMERAL  );
-		put( "semi-persistent",  EntityPredicates::SEMIPERSISTENT);
+		put( "player",     EntityPredicates::PLAYER                );
+		put( "named",      NonPlayer(EntityPredicates::NAMED)      );
+		put( "tamed",      NonPlayer(EntityPredicates::TAMED)      );
+		put( "persistent", NonPlayer(EntityPredicates::PERSISTENT) );
+		put( "hostile",    NonPlayer(EntityPredicates::HOSTILE)    );
+		put( "passive",    NonPlayer(EntityPredicates::PASSIVE)    );
+		put( "ephemeral",  NonPlayer(EntityPredicates::EPHEMERAL)  );
+		put( "semi-persistent",  NonPlayer(EntityPredicates::SEMIPERSISTENT));
 	}};
 
-	static public boolean	NAMED(Entity e) { return e.hasCustomName() || e.isPlayer(); }
-	static public boolean	HOSTILE(Entity e) { return e instanceof HostileEntity; }
-	static public boolean	PASSIVE(Entity e) { return e instanceof PassiveEntity; }
+	static private Predicate<Entity> NonPlayer(Predicate<Entity> base){
+		return e -> !PLAYER(e) && base.test(e);
+	}
+
+	static public boolean	PLAYER(Entity e) { return e instanceof PlayerEntity; }
+	static public boolean	NAMED(Entity e) { return e.hasCustomName(); }
+	static public boolean	TAMED(Entity entity) { return entity instanceof Tameable tameable && tameable.getOwnerUuid() != null; }
+	static public boolean	HOSTILE(Entity e) { return e instanceof MobEntity mob && ((IMobEntityMixin)mob).callIsDisallowedInPeaceful(); }
+	static public boolean	PASSIVE(Entity e) { return !HOSTILE(e); }
 	static public boolean	EPHEMERAL(Entity e) { return !PERSISTENT(e); }
 	static public boolean	SEMIPERSISTENT(Entity e) { return e instanceof MobEntity mob && mob.cannotDespawn(); }
 
