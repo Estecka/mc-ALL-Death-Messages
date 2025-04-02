@@ -25,3 +25,6 @@ Initial Release
 ### Worked around:
 - `World.getGamerules()` was moved to `ServerWorld`. Use `MinecraftServer.getGamerules()` instead.
 - `ServerPlayerEntity` no longer implements `CommandOutput`, `sendMessage(Text)` is effectively a different method. Use `sendMessageToClient()` instead.
+
+## 1.21.5
+- `Tameable` no longer has a `getOwnerUUID` method.

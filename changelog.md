@@ -52,6 +52,7 @@ Initial release
 - Updated for MC 1.21.2
 
 ## 1.6
+### 1.6.0
 - Players are no longer included in any built-in mob category.
 - Added a dedicated "Player" category.
 - Added a "Tamed" category, including both tameable pets and tameable mounts.
@@ -61,3 +62,5 @@ Initial release
 	- Piglins (except brutes) are now passive instead of hostile.
 - "Utility" now includes snow golems.
 - Added a `reload-styles` command.
+### 1.6.1
+- Updated for MC 1.21.5
