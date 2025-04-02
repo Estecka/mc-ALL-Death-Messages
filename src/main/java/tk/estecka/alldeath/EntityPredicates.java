@@ -30,7 +30,7 @@ public class EntityPredicates {
 
 	static public boolean	PLAYER(Entity e) { return e instanceof PlayerEntity; }
 	static public boolean	NAMED(Entity e) { return e.hasCustomName(); }
-	static public boolean	TAMED(Entity entity) { return entity instanceof Tameable tameable && tameable.getOwnerUuid() != null; }
+	static public boolean	TAMED(Entity entity) { return entity instanceof Tameable tameable && tameable.getOwnerReference() != null; }
 	static public boolean	HOSTILE(Entity e) { return e instanceof MobEntity mob && ((IMobEntityMixin)mob).callIsDisallowedInPeaceful(); }
 	static public boolean	PASSIVE(Entity e) { return !HOSTILE(e); }
 	static public boolean	EPHEMERAL(Entity e) { return !PERSISTENT(e); }
