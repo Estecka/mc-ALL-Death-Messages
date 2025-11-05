@@ -64,3 +64,5 @@ Initial release
 - Added a `reload-styles` command.
 ### 1.6.1
 - Updated for MC 1.21.5
+### 1.6.2
+- Updated for MC 1.21.6 and 1.21.9
