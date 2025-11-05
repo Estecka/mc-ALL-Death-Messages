@@ -1,23 +1,28 @@
 # All Death Messages
 
 ## Overview
-Enables death messages for configurable categories of mobs, and style their names with different colours and effects.
+Enables death messages for several categories of mobs, and add colours to their names in death messages. Messages use the same texts as vanilla death messages.
 
-Categories are defined in a config file. For each category, separate `kill` and `death` gamerules are generated.
+For each category, separate `kill` and `death` gamerules are generated. 
+
+Custom mob categories must be defined in a config file. There is currently no config screen.
+
 
 ## Message Triggers
 
-There is a handful of built-in categories based on mob properties. Custom categories can be created in a config file based on entity types.
+Built-in categories based on mob properties. Custom categories are based on entity types.
 
+A death message will appear if its victim belongs to an enabled death rule, or if any of its recent assailant has an enabled kill rule.
 A mob may belong to multiple categories; it will trigger a death message if any of them has its rule enabled.
 
+
 ### Built-in categories
-- `all`: Applies to everything. When enabled, this overrules all other categories.
-- `player`: Players are excluded from other categories below.
-- `named`: Mobs that have been given a custom name.
-- `tamed`: Both tamed pets and tamed mounts.
-- `ephemeral`/`persistent`: Mobs that will/won't naturally despawn.
-- `hostile`/`passive`: Mobs that are allowed/disallowed in Peaceful difficulty.
+- **`all`**: Applies to everything. When enabled, this overrules all other categories.
+- **`player`**: Players are excluded from every other built-in categories below.
+- **`named`**: Mobs that have been given a custom name.
+- **`tamed`**: Includes both tamed pets and tamed mounts. Messages will still be broadcast to all players regardless of ownership.
+- **`ephemeral`**/**`persistent`**: Mobs that will/won't naturally despawn.
+- **`passive`**/**`hostile`**: Mobs that are allowed/disallowed in Peaceful difficulty.
 
 ### Custom categories
 Custom categories are defined in `.minecraft/config/alldeath-rules.json`.
@@ -45,23 +50,22 @@ This example is provided as the default config file:
 
 ## Name Styling
 
-Mob names in death messages can have different colours and styling applied. Those styles can be based on same categories used in gamerules (both built-in and user-defined), but can also be independent from them. They can define anonymous categories which do not match any gamerule.
+Mob names in death messages can have different colours and styling applied. Styles can be based on the same categories used in gamerules (both built-in and user-defined), or can be based on anonymous lists of entity types that don't correspond to any gamerule.
 
-When multiple styles match a mob, they will all be combined. Where properties conflict, the topmost style takes priority over the lower ones.
-Multiple styles can be created for the same category, allowing different style properties to have different priorities.
-
+The way styles are applied is similar to CSS stylesheets, except in Json and in reverse order.
+When multiple styles match a mob, they will all be combined, and the topmost style takes priority in case of conflicts.
 
 Styles are defined in the config file `.minecraft/config/alldeath-styles.json`, as an array of Json Object.  
 Each object may contain the following properties:
-- _(Mandatory)_ `rule`: The mobs that will have the style applied
-	- If it is a string, it will be treated as the name of a gamerule.
-	- If it is an array of strings, it will be treated as a list of entity types, similar to how gamerules are defined.
-- _(Optional)_ `color`: A string. Can be either a hex code formatted as `#rrggbb`, or a built-in colour name.
-- _(Optional)_ `bold`: A boolean
-- _(Optional)_ `italic`: A boolean
-- _(Optional)_ `underline`: A boolean
-- _(Optional)_ `strikethrough`: A boolean
-- _(Optional)_ `obfuscated`: A boolean
+- _(Mandatory)_ **`rule`**: The mobs that will have the style applied
+	- If it is a string, it will be treated as the name of a mob category. (Either built-in or custom.)
+	- If it is an array of strings, it will be treated as a list of entity types.
+- _(Optional)_ **`color`**: A string. Can be either a hex code formatted as `#rrggbb`, or a built-in colour name.
+- _(Optional)_ **`bold`**: A boolean
+- _(Optional)_ **`italic`**: A boolean
+- _(Optional)_ **`underline`**: A boolean
+- _(Optional)_ **`strikethrough`**: A boolean
+- _(Optional)_ **`obfuscated`**: A boolean
 
 ![Styles](./doc/Style.gif)  
 ![Colour Names](./doc/Colours.jpg)
@@ -71,10 +75,10 @@ Each object may contain the following properties:
 [
 	{
 		"rule": [
-			"minecraft:player"
+			"minecraft:wolf"
 		],
 		"color": "yellow",
-		"italic": false,
+		"italic": false
 	},
 	{
 		"rule": "named",
@@ -83,12 +87,14 @@ Each object may contain the following properties:
 	}
 ]
 ```
+#### Walkthrough
+The topmost style defines an anonymous category for entities of type "wolf". The bottom one refers to the built-in "named" category.
 
-The topmost style defines an anonymous category for entities of type "player". The bottom one refers to the built-in "named" category.
+If a wolf is given a name, both styles will be applied:  
+The "italic" property is taken from the topmost style; its names will not be italicized.  
+The topmost style does not define a "underline" property, so the lower property is used, and its name will be underlined.
 
-Players also belong to the "named" category, so both styles will be applied to a Player's name:  
-The "italic" property is taken from the topmost style; player names will not be italicized.  
-The topmost style does not define a "underline" property, so the lower property is used, and player names will be underlined.
+![Example](./doc/Style%20example.png)
 
 ## Commands
 
@@ -98,4 +104,4 @@ The topmost style does not define a "underline" property, so the lower property 
 - `see-enabled` Lists all currently enabled rules
 - `disable-all <confirm>` Disables all death message rules.
 - `set <rule name> <rule type> <boolean>` Equivalent to the `gamerule` command, but with a more convenient auto-complete.
-- `reload-styles` Reloads styles from theis config file.
+- `reload-styles` Reloads styles from the config file.

@@ -7,7 +7,6 @@
 		"DamageTrackerMixin",
 		"EntityMixin",
 		"IDamageTrackerMixin",
-		"IMobEntityMixin",
 		"LivingEntityMixin",
 		"ServerPlayerEntityMixin"
 	],

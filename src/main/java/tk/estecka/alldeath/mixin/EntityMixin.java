@@ -18,11 +18,11 @@ public abstract class EntityMixin
 	@ModifyArg( method="getHoverEvent", index=2, at=@At(value="INVOKE", target="net/minecraft/text/HoverEvent$EntityContent.<init> (Lnet/minecraft/entity/EntityType;Ljava/util/UUID;Lnet/minecraft/text/Text;)V"))
 	private Text	alldeath$PosInsertion(Text entityName){
 		Entity entity = (Entity)(Object)this;
-		if (entity.getWorld().isClient() || !entity.getServer().getGameRules().getBoolean(AllDeathMessages.COORD_RULE))
+		if (entity.getEntityWorld().isClient() || !entity.getEntityWorld().getServer().getGameRules().getBoolean(AllDeathMessages.COORD_RULE))
 			return entityName;
 
 		BlockPos pos = entity.getBlockPos();
-		var world = entity.getWorld().getRegistryKey().getValue();
+		var world = entity.getEntityWorld().getRegistryKey().getValue();
 		MutableText addendum = Text.translatableWithFallback("gui.alldeath.entity_tooltip.location", "(%s) in %s", pos.toShortString(), world.toString());
 			
 		MutableText text = Text.empty();

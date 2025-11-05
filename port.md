@@ -28,3 +28,8 @@ Initial Release
 
 ## 1.21.5
 - `Tameable` no longer has a `getOwnerUUID` method.
+
+## 1.21.9
+- `Entity::getWorld` was replaced with `HeldItemContext::getEntityWorld`.
+- `Entity::getServer` was removed.
+- `MobEntity::isDisallowedInPeaceful` was replaced with `EntityType::isAllowedInPeaceful`.

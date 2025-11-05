@@ -9,10 +9,9 @@ import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import tk.estecka.alldeath.mixin.IMobEntityMixin;
 
 public class EntityPredicates {
-	static public final Map<String, Predicate<Entity>>	predicates = new LinkedHashMap<String, Predicate<Entity>>(8){{
+	static public final Map<String, Predicate<Entity>>	predicates = new LinkedHashMap<String, Predicate<Entity>>(11){{
 		put( "all", e->true );
 		put( "player",     EntityPredicates::PLAYER                );
 		put( "named",      NonPlayer(EntityPredicates::NAMED)      );
@@ -31,7 +30,7 @@ public class EntityPredicates {
 	static public boolean	PLAYER(Entity e) { return e instanceof PlayerEntity; }
 	static public boolean	NAMED(Entity e) { return e.hasCustomName(); }
 	static public boolean	TAMED(Entity entity) { return entity instanceof Tameable tameable && tameable.getOwnerReference() != null; }
-	static public boolean	HOSTILE(Entity e) { return e instanceof MobEntity mob && ((IMobEntityMixin)mob).callIsDisallowedInPeaceful(); }
+	static public boolean	HOSTILE(Entity e) { return e instanceof MobEntity mob && !mob.getType().isAllowedInPeaceful(); }
 	static public boolean	PASSIVE(Entity e) { return !HOSTILE(e); }
 	static public boolean	EPHEMERAL(Entity e) { return !PERSISTENT(e); }
 	static public boolean	SEMIPERSISTENT(Entity e) { return e instanceof MobEntity mob && mob.cannotDespawn(); }

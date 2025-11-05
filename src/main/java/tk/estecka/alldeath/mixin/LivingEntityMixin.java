@@ -22,8 +22,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class LivingEntityMixin 
 {
 	private static boolean	alldeath$ShouldHandleEntityDeath(LivingEntity entity){
-		return !entity.getWorld().isClient()
-			&& DeathRules.IsRuleEnabled(entity.getServer(), GameRules.SHOW_DEATH_MESSAGES)
+		return !entity.getEntityWorld().isClient()
+			&& DeathRules.IsRuleEnabled(entity, GameRules.SHOW_DEATH_MESSAGES)
 			;
 	}
 
@@ -51,8 +51,8 @@ public abstract class LivingEntityMixin
 
 		if (rule != null){
 			Text msg = damages.getDeathMessage();
-			dyingEntity.getWorld().getServer().sendMessage(msg);
-			for (ServerPlayerEntity player : dyingEntity.getWorld().getServer().getPlayerManager().getPlayerList())
+			dyingEntity.getEntityWorld().getServer().sendMessage(msg);
+			for (ServerPlayerEntity player : dyingEntity.getEntityWorld().getServer().getPlayerManager().getPlayerList())
 			if  (player != owner)
 				player.sendMessageToClient(msg, false);
 			AllDeathMessages.LOGGER.info("Death message triggered by {} ({}) using rule {}", rulingEntity.getName().getString(), rulingEntity.getType(), rule);

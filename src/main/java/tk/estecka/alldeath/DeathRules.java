@@ -10,7 +10,6 @@ import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -79,8 +78,8 @@ public class DeathRules
 		}
 	}
 
-	public static boolean	IsRuleEnabled(MinecraftServer server, GameRules.Key<BooleanRule> key){
-		BooleanRule rule = server.getGameRules().get(key);
+	public static boolean	IsRuleEnabled(Entity entity, GameRules.Key<BooleanRule> key){
+		BooleanRule rule = entity.getEntityWorld().getServer().getGameRules().get(key);
 		if (rule != null)
 			return rule.get();
 		else {
@@ -91,8 +90,9 @@ public class DeathRules
 
 	@Nullable
 	public static GameRules.Key<BooleanRule>	HasDeathRule(LivingEntity entity){
+		
 		for (var entry : nameToRule.entrySet())
-			if (IsRuleEnabled(entity.getServer(), entry.getValue().death) && EntityPredicates.getOrDefault(entry.getKey()).test(entity))
+			if (IsRuleEnabled(entity, entry.getValue().death) && EntityPredicates.getOrDefault(entry.getKey()).test(entity))
 				return entry.getValue().death;
 		return null;
 	}
@@ -100,7 +100,7 @@ public class DeathRules
 	@Nullable
 	public static GameRules.Key<BooleanRule>	HasKillRule(Entity entity){
 		for (var entry : nameToRule.entrySet())
-			if (IsRuleEnabled(entity.getServer(), entry.getValue().kill) && EntityPredicates.getOrDefault(entry.getKey()).test(entity))
+			if (IsRuleEnabled(entity, entry.getValue().kill) && EntityPredicates.getOrDefault(entry.getKey()).test(entity))
 				return entry.getValue().kill;
 		return null;
 	}
