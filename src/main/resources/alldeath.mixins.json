@@ -6,6 +6,7 @@
 		"DamageSourceMixin",
 		"DamageTrackerMixin",
 		"EntityMixin",
+		"GameRuleRegistryFixMixin",
 		"IDamageTrackerMixin",
 		"LivingEntityMixin",
 		"ServerPlayerEntityMixin"

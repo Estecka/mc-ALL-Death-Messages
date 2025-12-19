@@ -10,6 +10,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import tk.estecka.alldeath.AllDeathMessages;
+import tk.estecka.alldeath.DeathRules;
 
 @Unique
 @Mixin(Entity.class)
@@ -18,7 +19,7 @@ public abstract class EntityMixin
 	@ModifyArg( method="getHoverEvent", index=2, at=@At(value="INVOKE", target="net/minecraft/text/HoverEvent$EntityContent.<init> (Lnet/minecraft/entity/EntityType;Ljava/util/UUID;Lnet/minecraft/text/Text;)V"))
 	private Text	alldeath$PosInsertion(Text entityName){
 		Entity entity = (Entity)(Object)this;
-		if (entity.getEntityWorld().isClient() || !entity.getEntityWorld().getServer().getGameRules().getBoolean(AllDeathMessages.COORD_RULE))
+		if (entity.getEntityWorld().isClient() || !DeathRules.IsRuleEnabled(entity, AllDeathMessages.COORD_RULE))
 			return entityName;
 
 		BlockPos pos = entity.getBlockPos();
