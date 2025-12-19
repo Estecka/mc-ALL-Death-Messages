@@ -7,6 +7,8 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.command.permission.Permission;
+import net.minecraft.command.permission.PermissionLevel;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
@@ -14,9 +16,9 @@ import net.minecraft.server.command.CommandManager.RegistrationEnvironment;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.GameRules;
+import net.minecraft.world.rule.GameRule;
+import net.minecraft.world.rule.GameRules;
 import net.minecraft.world.World;
-import net.minecraft.world.GameRules.BooleanRule;
 import tk.estecka.alldeath.DeathRules.MobCategory;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
@@ -44,7 +46,7 @@ public class Commands
 	}
 
 	static public void RegisterWith(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, RegistrationEnvironment env){
-		var root = literal("alldeathmsg").requires(s->s.hasPermissionLevel(2));
+		var root = literal("alldeathmsg").requires(s->s.getPermissions().hasPermission(new Permission.Level(PermissionLevel.GAMEMASTERS)));
 
 		root.then(literal("test")
 			.then(argument(ENTITY_ARG, entities())
@@ -133,8 +135,8 @@ public class Commands
 
 		boolean first = true;
 		for (var rule : DeathRules.nameToRule.entrySet()) {
-			boolean death = gamerules.getBoolean(rule.getValue().death);
-			boolean kill  = gamerules.getBoolean(rule.getValue().kill);
+			boolean death = gamerules.getValue(rule.getValue().death);
+			boolean kill  = gamerules.getValue(rule.getValue().kill);
 			if (death || kill){
 				if (first) {
 					first = false;
@@ -157,15 +159,15 @@ public class Commands
 	static private int	DisableAll(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 		final World world = context.getSource().getWorld();
 		final MinecraftServer server = world.getServer();
-		final GameRules gamerules = server.getGameRules();
+		final GameRules gamerules = context.getSource().getWorld().getGameRules();
 		if (!getBool(context, CONFIRM_ARG)){
 			context.getSource().sendError(ServersideTranslatable("command.alldeathmsg.disable-all.failure"));
 			return -1;
 		}
 
 		for (var rule : DeathRules.nameToRule.values()) {
-			gamerules.get(rule.death).set(false, server);
-			gamerules.get(rule.kill ).set(false, server);
+			gamerules.setValue(rule.death, false, server);
+			gamerules.setValue(rule.kill,  false, server);
 		}
 		context.getSource().sendFeedback(()->ServersideTranslatable("command.alldeathmsg.disable-all.success"), true);
 		return 1;
@@ -178,7 +180,7 @@ public class Commands
 
 	static private int	SetRule(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
 		final MinecraftServer server = context.getSource().getServer();
-		final GameRules gamerules = server.getGameRules();
+		final GameRules gamerules = context.getSource().getWorld().getGameRules();
 
 		String ruleName = getString(context, RULENAME_ARG);
 		String ruleType = getString(context, RULETYPE_ARG);
@@ -188,16 +190,15 @@ public class Commands
 		if (rules == null)
 			return SetRuleFailure(context, ruleName, ruleType);
 
-		GameRules.Key<BooleanRule> ruleKey;
+		GameRule<Boolean> ruleKey;
 		switch (ruleType) {
 			case "death": ruleKey=rules.death; break;
 			case "kill" : ruleKey=rules.kill ; break;
 			default: return SetRuleFailure(context, ruleName, ruleType);
 		}
 
-		BooleanRule rule = gamerules.get(ruleKey);
-		rule.set(value, server);
-		context.getSource().sendFeedback(()->Text.translatable("commands.gamerule.set", ruleKey.getName(), rule.toString()), true);
+		gamerules.setValue(ruleKey, value, server);
+		context.getSource().sendFeedback(()->Text.translatable("commands.gamerule.set", ruleKey.getId().toShortString(), String.valueOf(value)), true);
 		return 1;
 	}
 }

@@ -9,8 +9,8 @@ import net.minecraft.entity.damage.DamageTracker;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.GameRules.BooleanRule;
+import net.minecraft.world.rule.GameRule;
+import net.minecraft.world.rule.GameRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -38,7 +38,7 @@ public abstract class LivingEntityMixin
 
 		Entity	rulingEntity = dyingEntity;
 		LivingEntity owner = null;
-		GameRules.Key<BooleanRule> rule = DeathRules.HasDeathRule(dyingEntity);
+		GameRule<Boolean> rule = DeathRules.HasDeathRule(dyingEntity);
 
 		if (dyingEntity instanceof TameableEntity tamedEntity)
 			owner = tamedEntity.getOwner();

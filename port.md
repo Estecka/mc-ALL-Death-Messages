@@ -36,3 +36,4 @@ Initial Release
 
 ## 1.21.11
 - Methods of registering gamerules changed.
+- Permirsions are now overly complicated.

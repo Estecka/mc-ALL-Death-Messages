@@ -5,17 +5,13 @@ import java.util.HashMap;
 import java.util.function.Predicate;
 import org.jetbrains.annotations.Nullable;
 import com.google.gson.JsonElement;
-import net.fabricmc.fabric.api.gamerule.v1.CustomGameRuleCategory;
-import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
-import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.GameRules.BooleanRule;
-import net.minecraft.world.GameRules.Key;
+import net.minecraft.world.rule.GameRule;
+import net.minecraft.world.rule.GameRuleCategory;
 import tk.estecka.alldeath.config.RuleParser;
 import tk.estecka.alldeath.config.JsonConfig;
 import static tk.estecka.alldeath.AllDeathMessages.MODID;
@@ -25,8 +21,8 @@ public class DeathRules
 {
 	static public class MobCategory
 	{
-		public final Key<BooleanRule> death;
-		public final Key<BooleanRule> kill;
+		public final GameRule<Boolean> death;
+		public final GameRule<Boolean> kill;
 		public MobCategory(String name, Boolean deathDefault, Boolean killDefault){
 			this.death = CreateBooleanRule(DEATH_CATEGORY, name, deathDefault);
 			this.kill  = CreateBooleanRule(KILL_CATEGORY,  name, killDefault );
@@ -35,11 +31,14 @@ public class DeathRules
 
 	static public final String	CONFIG_FILE = "alldeath-rules.json";
 	static public final HashMap<String,MobCategory> nameToRule = new HashMap<>();
-	static public final CustomGameRuleCategory DEATH_CATEGORY = new CustomGameRuleCategory(Identifier.of(MODID, "death"), Text.translatable("gamerule.category.alldeath.death").formatted(Formatting.BOLD, Formatting.YELLOW));
-	static public final CustomGameRuleCategory KILL_CATEGORY  = new CustomGameRuleCategory(Identifier.of(MODID, "kill" ), Text.translatable("gamerule.category.alldeath.kill" ).formatted(Formatting.BOLD, Formatting.YELLOW));
+	static public final GameRuleCategory DEATH_CATEGORY = GameRuleCategory.register(Identifier.of(MODID, "death"));
+	static public final GameRuleCategory KILL_CATEGORY  = GameRuleCategory.register(Identifier.of(MODID, "kill" ));
 
-	static private Key<BooleanRule>	CreateBooleanRule(CustomGameRuleCategory category, String name, boolean defaultValue){
-		return GameRuleRegistry.register("showDeathMessages."+name+"."+category.getId().getPath(), category, GameRuleFactory.createBooleanRule(defaultValue));
+	static private GameRule<Boolean> CreateBooleanRule(GameRuleCategory category, String name, boolean defaultValue){
+		return GameRuleBuilder.forBoolean(defaultValue)
+			.category(category)
+			.buildAndRegister(Identifier.of(MODID, "show_death_messages."+name+"."+category.id().getPath()))
+			;
 	}
 
 	static private void	InitializeBuiltinRule(String ruleName, boolean death, boolean kill){
@@ -78,19 +77,12 @@ public class DeathRules
 		}
 	}
 
-	public static boolean	IsRuleEnabled(Entity entity, GameRules.Key<BooleanRule> key){
-		BooleanRule rule = entity.getEntityWorld().getServer().getGameRules().get(key);
-		if (rule != null)
-			return rule.get();
-		else {
-			AllDeathMessages.LOGGER.error("The rule {} doesn't exist", key.getName());
-			return false;
-		}
+	public static boolean IsRuleEnabled(Entity entity, GameRule<Boolean> key){
+		return ((ServerWorld)entity.getEntityWorld()).getGameRules().getValue(key);
 	}
 
 	@Nullable
-	public static GameRules.Key<BooleanRule>	HasDeathRule(LivingEntity entity){
-		
+	public static GameRule<Boolean> HasDeathRule(LivingEntity entity){
 		for (var entry : nameToRule.entrySet())
 			if (IsRuleEnabled(entity, entry.getValue().death) && EntityPredicates.getOrDefault(entry.getKey()).test(entity))
 				return entry.getValue().death;
@@ -98,7 +90,7 @@ public class DeathRules
 	}
 
 	@Nullable
-	public static GameRules.Key<BooleanRule>	HasKillRule(Entity entity){
+	public static GameRule<Boolean> HasKillRule(Entity entity){
 		for (var entry : nameToRule.entrySet())
 			if (IsRuleEnabled(entity, entry.getValue().kill) && EntityPredicates.getOrDefault(entry.getKey()).test(entity))
 				return entry.getValue().kill;
