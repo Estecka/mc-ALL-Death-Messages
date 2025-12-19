@@ -33,3 +33,6 @@ Initial Release
 - `Entity::getWorld` was replaced with `HeldItemContext::getEntityWorld`.
 - `Entity::getServer` was removed.
 - `MobEntity::isDisallowedInPeaceful` was replaced with `EntityType::isAllowedInPeaceful`.
+
+## 1.21.11
+- Methods of registering gamerules changed.
