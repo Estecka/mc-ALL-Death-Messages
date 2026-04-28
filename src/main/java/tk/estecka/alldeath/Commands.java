@@ -6,19 +6,19 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.command.permission.Permission;
-import net.minecraft.command.permission.PermissionLevel;
-import net.minecraft.entity.Entity;
+import net.minecraft.commands.CommandBuildContext;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands.CommandSelection;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.command.CommandManager.RegistrationEnvironment;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.rule.GameRule;
-import net.minecraft.world.rule.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.server.permissions.Permission;
+import net.minecraft.server.permissions.PermissionLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gamerules.GameRule;
+import net.minecraft.world.level.gamerules.GameRules;
 import tk.estecka.alldeath.DeathRules.MobCategory;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
@@ -26,15 +26,15 @@ import static com.mojang.brigadier.arguments.BoolArgumentType.bool;
 import static com.mojang.brigadier.arguments.BoolArgumentType.getBool;
 import static com.mojang.brigadier.arguments.StringArgumentType.string;
 import static com.mojang.brigadier.arguments.StringArgumentType.getString;
-import static net.minecraft.server.command.CommandManager.literal;
-import static net.minecraft.server.command.CommandManager.argument;
-import static net.minecraft.command.argument.EntityArgumentType.entities;
-import static net.minecraft.command.argument.EntityArgumentType.getEntities;
+import static net.minecraft.commands.Commands.literal;
+import static net.minecraft.commands.Commands.argument;
+import static net.minecraft.commands.arguments.EntityArgument.entities;
+import static net.minecraft.commands.arguments.EntityArgument.getEntities;
 import static tk.estecka.alldeath.AllDeathMessages.ServersideTranslatable;
 
 public class Commands 
 {
-	static public final Identifier ID = Identifier.of("alldeath", "command");
+	static public final Identifier ID = Identifier.fromNamespaceAndPath("alldeath", "command");
 	static private final String ENTITY_ARG = "entity";
 	static private final String RULENAME_ARG = "rule name";
 	static private final String RULETYPE_ARG = "rule type";
@@ -45,8 +45,8 @@ public class Commands
 		CommandRegistrationCallback.EVENT.register(ID, Commands::RegisterWith);
 	}
 
-	static public void RegisterWith(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, RegistrationEnvironment env){
-		var root = literal("alldeathmsg").requires(s->s.getPermissions().hasPermission(new Permission.Level(PermissionLevel.GAMEMASTERS)));
+	static public void RegisterWith(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registryAccess, CommandSelection env){
+		var root = literal("alldeathmsg").requires(s->s.permissions().hasPermission(new Permission.HasCommandLevel(PermissionLevel.GAMEMASTERS)));
 
 		root.then(literal("test")
 			.then(argument(ENTITY_ARG, entities())
@@ -83,24 +83,24 @@ public class Commands
 		dispatcher.register(root);
 	}
 
-	static private CompletableFuture<Suggestions> RulenameAutofill(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder){
+	static private CompletableFuture<Suggestions> RulenameAutofill(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder){
 		for (var name : DeathRules.nameToRule.keySet())
 			builder.suggest(name);
 		return builder.buildFuture();
 	}
 
-	static private CompletableFuture<Suggestions> RuletypeAutofill(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder){
+	static private CompletableFuture<Suggestions> RuletypeAutofill(CommandContext<CommandSourceStack> context, SuggestionsBuilder builder){
 		builder.suggest("kill");
 		builder.suggest("death");
 		return builder.buildFuture();
 	}
 
-	static private int	TestEntities(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+	static private int	TestEntities(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
 		Collection<? extends Entity> entities = getEntities(context, ENTITY_ARG);
 
 		for (Entity e : entities)
 		{
-			MutableText result = Text.empty();
+			MutableComponent result = Component.empty();
 			result.append(DeathStyles.getStyledName(e)).append(": ");
 			boolean first = true;
 			for (var predicate : EntityPredicates.predicates.entrySet())
@@ -111,76 +111,76 @@ public class Commands
 					result.append(", ");
 				result.append(predicate.getKey());
 			}
-			context.getSource().sendFeedback(()->result, false);
+			context.getSource().sendSuccess(()->result, false);
 		}
 
 		return 0;
 	}
 
-	static private int	ReloadStyles(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+	static private int	ReloadStyles(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
 		DeathStyles.STYLES.clear();
 		if (DeathStyles.initialize()) {
-			context.getSource().sendFeedback(()->ServersideTranslatable("command.alldeathmsg.reload-styles.success"), true);
+			context.getSource().sendSuccess(()->ServersideTranslatable("command.alldeathmsg.reload-styles.success"), true);
 			return 1;
 		}
 		else {
-			context.getSource().sendError(ServersideTranslatable("command.alldeathmsg.reload-styles.failure"));
+			context.getSource().sendFailure(ServersideTranslatable("command.alldeathmsg.reload-styles.failure"));
 			return -1;
 		}
 	}
 
-	static private int	SeeEnabled(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+	static private int	SeeEnabled(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
 		final var source = context.getSource();
-		final GameRules gamerules = source.getWorld().getGameRules();
+		final GameRules gamerules = source.getLevel().getGameRules();
 
 		boolean first = true;
 		for (var rule : DeathRules.nameToRule.entrySet()) {
-			boolean death = gamerules.getValue(rule.getValue().death);
-			boolean kill  = gamerules.getValue(rule.getValue().kill);
+			boolean death = gamerules.get(rule.getValue().death);
+			boolean kill  = gamerules.get(rule.getValue().kill);
 			if (death || kill){
 				if (first) {
 					first = false;
-					source.sendFeedback(()->ServersideTranslatable("command.alldeathmsg.see-enabled.success"), false);
+					source.sendSuccess(()->ServersideTranslatable("command.alldeathmsg.see-enabled.success"), false);
 				}
-				MutableText text = Text.literal("- ").append(rule.getKey()).append(": ");
+				MutableComponent text = Component.literal("- ").append(rule.getKey()).append(": ");
 				if (death) text.append("Death");
 				if (death && kill) text.append(", ");
 				if (kill ) text.append("Kill");
-				source.sendFeedback(()->text, false);
+				source.sendSuccess(()->text, false);
 			}
 		}
 
 		if (first)
-			source.sendFeedback(()->ServersideTranslatable("command.alldeathmsg.see-enabled.failure"), false);
+			source.sendSuccess(()->ServersideTranslatable("command.alldeathmsg.see-enabled.failure"), false);
 
 		return 0;
 	}
 
-	static private int	DisableAll(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-		final World world = context.getSource().getWorld();
+	static private int	DisableAll(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+		final Level world = context.getSource().getLevel();
 		final MinecraftServer server = world.getServer();
-		final GameRules gamerules = context.getSource().getWorld().getGameRules();
+		final GameRules gamerules = context.getSource().getLevel().getGameRules();
 		if (!getBool(context, CONFIRM_ARG)){
-			context.getSource().sendError(ServersideTranslatable("command.alldeathmsg.disable-all.failure"));
+			context.getSource().sendFailure(ServersideTranslatable("command.alldeathmsg.disable-all.failure"));
 			return -1;
 		}
 
 		for (var rule : DeathRules.nameToRule.values()) {
-			gamerules.setValue(rule.death, false, server);
-			gamerules.setValue(rule.kill,  false, server);
+			gamerules.set(rule.death, false, server);
+			gamerules.set(rule.kill,  false, server);
 		}
-		context.getSource().sendFeedback(()->ServersideTranslatable("command.alldeathmsg.disable-all.success"), true);
+		context.getSource().sendSuccess(()->ServersideTranslatable("command.alldeathmsg.disable-all.success"), true);
 		return 1;
 	}
 
-	static private int	SetRuleFailure(CommandContext<ServerCommandSource> context, String ruleName, String ruleType){
-		context.getSource().sendError(ServersideTranslatable("command.alldeathmsg.set.failure", ruleName, ruleType));
+	static private int	SetRuleFailure(CommandContext<CommandSourceStack> context, String ruleName, String ruleType){
+		context.getSource().sendFailure(ServersideTranslatable("command.alldeathmsg.set.failure", ruleName, ruleType));
 		return -1;
 	}
 
-	static private int	SetRule(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+	static private int	SetRule(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
 		final MinecraftServer server = context.getSource().getServer();
-		final GameRules gamerules = context.getSource().getWorld().getGameRules();
+		final GameRules gamerules = context.getSource().getLevel().getGameRules();
 
 		String ruleName = getString(context, RULENAME_ARG);
 		String ruleType = getString(context, RULETYPE_ARG);
@@ -197,8 +197,8 @@ public class Commands
 			default: return SetRuleFailure(context, ruleName, ruleType);
 		}
 
-		gamerules.setValue(ruleKey, value, server);
-		context.getSource().sendFeedback(()->Text.translatable("commands.gamerule.set", ruleKey.getId().toShortString(), String.valueOf(value)), true);
+		gamerules.set(ruleKey, value, server);
+		context.getSource().sendSuccess(()->Component.translatable("commands.gamerule.set", ruleKey.getIdentifier().toShortString(), String.valueOf(value)), true);
 		return 1;
 	}
 }

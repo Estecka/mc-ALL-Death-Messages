@@ -6,12 +6,12 @@ import java.util.function.Predicate;
 import org.jetbrains.annotations.Nullable;
 import com.google.gson.JsonElement;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleBuilder;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.rule.GameRule;
-import net.minecraft.world.rule.GameRuleCategory;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.gamerules.GameRule;
+import net.minecraft.world.level.gamerules.GameRuleCategory;
 import tk.estecka.alldeath.config.RuleParser;
 import tk.estecka.alldeath.config.JsonConfig;
 import static tk.estecka.alldeath.AllDeathMessages.MODID;
@@ -31,13 +31,13 @@ public class DeathRules
 
 	static public final String	CONFIG_FILE = "alldeath-rules.json";
 	static public final HashMap<String,MobCategory> nameToRule = new HashMap<>();
-	static public final GameRuleCategory DEATH_CATEGORY = GameRuleCategory.register(Identifier.of(MODID, "death"));
-	static public final GameRuleCategory KILL_CATEGORY  = GameRuleCategory.register(Identifier.of(MODID, "kill" ));
+	static public final GameRuleCategory DEATH_CATEGORY = GameRuleCategory.register(Identifier.fromNamespaceAndPath(MODID, "death"));
+	static public final GameRuleCategory KILL_CATEGORY  = GameRuleCategory.register(Identifier.fromNamespaceAndPath(MODID, "kill" ));
 
 	static private GameRule<Boolean> CreateBooleanRule(GameRuleCategory category, String name, boolean defaultValue){
 		return GameRuleBuilder.forBoolean(defaultValue)
 			.category(category)
-			.buildAndRegister(Identifier.of(MODID, "show_death_messages."+name+"."+category.id().getPath()))
+			.buildAndRegister(Identifier.fromNamespaceAndPath(MODID, "show_death_messages."+name+"."+category.id().getPath()))
 			;
 	}
 
@@ -78,7 +78,7 @@ public class DeathRules
 	}
 
 	public static boolean IsRuleEnabled(Entity entity, GameRule<Boolean> key){
-		return ((ServerWorld)entity.getEntityWorld()).getGameRules().getValue(key);
+		return ((ServerLevel)entity.level()).getGameRules().get(key);
 	}
 
 	@Nullable

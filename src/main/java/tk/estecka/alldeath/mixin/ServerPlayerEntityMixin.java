@@ -5,23 +5,23 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.rule.GameRule;
-import net.minecraft.world.rule.GameRules;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.gamerules.GameRule;
+import net.minecraft.world.level.gamerules.GameRules;
 import tk.estecka.alldeath.AllDeathMessages;
 import tk.estecka.alldeath.DeathRules;
 
-@Mixin(ServerPlayerEntity.class)
+@Mixin(ServerPlayer.class)
 public class ServerPlayerEntityMixin
 {
 	@Unique static private final GameRule<Boolean> PLAYER_RULE = DeathRules.nameToRule.get("player").death;
 
 	@WrapOperation(
-		method = "onDeath",
+		method = "die",
 		at = @At(
 			value = "INVOKE",
 			ordinal = 0,
-			target = "net/minecraft/world/rule/GameRules.getValue(Lnet/minecraft/world/rule/GameRule;)Ljava/lang/Object;"
+			target = "net/minecraft/world/level/gamerules/GameRules.get(Lnet/minecraft/world/level/gamerules/GameRule;)Ljava/lang/Object;"
 		)
 	)
 	private Object CheckPlayerDeathMessages(GameRules rules, GameRule<Boolean> key, Operation<Boolean> original){
@@ -31,7 +31,7 @@ public class ServerPlayerEntityMixin
 		else if (!key.equals(GameRules.SHOW_DEATH_MESSAGES))
 			AllDeathMessages.LOGGER.error("Invalid mixin injection point for the Player Death Message gamerule.");
 		else
-			result &= rules.getValue(PLAYER_RULE);
+			result &= rules.get(PLAYER_RULE);
 
 		return (Boolean)result;
 	}

@@ -2,15 +2,15 @@ package tk.estecka.alldeath.mixin;
 
 import tk.estecka.alldeath.AllDeathMessages;
 import tk.estecka.alldeath.DeathRules;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageRecord;
-import net.minecraft.entity.damage.DamageTracker;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.world.rule.GameRule;
-import net.minecraft.world.rule.GameRules;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.CombatEntry;
+import net.minecraft.world.damagesource.CombatTracker;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.level.gamerules.GameRule;
+import net.minecraft.world.level.gamerules.GameRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,16 +22,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class LivingEntityMixin 
 {
 	private static boolean	alldeath$ShouldHandleEntityDeath(LivingEntity entity){
-		return !entity.getEntityWorld().isClient()
+		return !entity.level().isClientSide()
 			&& DeathRules.IsRuleEnabled(entity, GameRules.SHOW_DEATH_MESSAGES)
 			;
 	}
 
 
-	@Inject( method="onDeath", at=@At("HEAD") )
+	@Inject( method="die", at=@At("HEAD") )
 	private void alldeath$TriggerMessage(CallbackInfo info) {
 		final LivingEntity dyingEntity = (LivingEntity)(Object)this;
-		final DamageTracker damages = dyingEntity.getDamageTracker();
+		final CombatTracker damages = dyingEntity.getCombatTracker();
 
 		if (!alldeath$ShouldHandleEntityDeath(dyingEntity))
 			return;
@@ -40,21 +40,21 @@ public abstract class LivingEntityMixin
 		LivingEntity owner = null;
 		GameRule<Boolean> rule = DeathRules.HasDeathRule(dyingEntity);
 
-		if (dyingEntity instanceof TameableEntity tamedEntity)
+		if (dyingEntity instanceof TamableAnimal tamedEntity)
 			owner = tamedEntity.getOwner();
 
 		if (rule == null) {
-			for (DamageRecord dmg : ((IDamageTrackerMixin)damages).getRecentDamage())
-				if ((rulingEntity=dmg.damageSource().getAttacker()) != null && (rule=DeathRules.HasKillRule(rulingEntity)) != null)
+			for (CombatEntry dmg : ((IDamageTrackerMixin)damages).getEntries())
+				if ((rulingEntity=dmg.source().getEntity()) != null && (rule=DeathRules.HasKillRule(rulingEntity)) != null)
 					break;
 		}
 
 		if (rule != null){
-			Text msg = damages.getDeathMessage();
-			dyingEntity.getEntityWorld().getServer().sendMessage(msg);
-			for (ServerPlayerEntity player : dyingEntity.getEntityWorld().getServer().getPlayerManager().getPlayerList())
+			Component msg = damages.getDeathMessage();
+			dyingEntity.level().getServer().sendSystemMessage(msg);
+			for (ServerPlayer player : dyingEntity.level().getServer().getPlayerList().getPlayers())
 			if  (player != owner)
-				player.sendMessageToClient(msg, false);
+				player.sendSystemMessage(msg, false);
 			AllDeathMessages.LOGGER.info("Death message triggered by {} ({}) using rule {}", rulingEntity.getName().getString(), rulingEntity.getType(), rule);
 		}
 	}

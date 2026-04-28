@@ -2,10 +2,10 @@ package tk.estecka.alldeath.config;
 
 import java.util.HashMap;
 import java.util.function.Predicate;
+import net.minecraft.world.entity.Entity;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.entity.Entity;
 import tk.estecka.alldeath.AllDeathMessages;
 import tk.estecka.alldeath.TypeEntityPredicate;
 

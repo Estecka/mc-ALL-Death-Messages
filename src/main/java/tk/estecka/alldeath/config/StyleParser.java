@@ -3,14 +3,13 @@ package tk.estecka.alldeath.config;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
-
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.world.entity.Entity;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.entity.Entity;
-import net.minecraft.text.TextColor;
 import tk.estecka.alldeath.AllDeathMessages;
 import tk.estecka.alldeath.EntityPredicates;
 import tk.estecka.alldeath.DeathStyles.MobStyle;

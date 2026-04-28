@@ -1,10 +1,10 @@
 package tk.estecka.alldeath.config;
 
 import java.util.HashSet;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
 import tk.estecka.alldeath.AllDeathMessages;
 import tk.estecka.alldeath.TypeEntityPredicate;
 
@@ -32,8 +32,8 @@ public class PredicateParser {
 	}
 
 	static private void	SpellCheck(String typeName){
-		Identifier id = Identifier.validate(typeName).getOrThrow();
-		if(id.getNamespace().equals("minecraft") && !Registries.ENTITY_TYPE.containsId(id))
+		Identifier id = Identifier.read(typeName).getOrThrow();
+		if(id.getNamespace().equals("minecraft") && !BuiltInRegistries.ENTITY_TYPE.containsKey(id))
 			AllDeathMessages.LOGGER.warn("The type \"{}\" does not exist in vanilla minecraft", id);
 	}
 }

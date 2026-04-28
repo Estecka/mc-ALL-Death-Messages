@@ -4,12 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.gamerule.v1.GameRuleBuilder;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Language;
-import net.minecraft.world.rule.GameRule;
-import net.minecraft.world.rule.GameRuleCategory;
+import net.minecraft.locale.Language;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.gamerules.GameRule;
+import net.minecraft.world.level.gamerules.GameRuleCategory;
 
 public class AllDeathMessages
 implements ModInitializer
@@ -19,7 +19,7 @@ implements ModInitializer
 
 	static public final GameRule<Boolean> COORD_RULE = GameRuleBuilder.forBoolean(false)
 		.category(GameRuleCategory.CHAT)
-		.buildAndRegister(Identifier.of(MODID, "show_death_coordinates"));
+		.buildAndRegister(Identifier.fromNamespaceAndPath(MODID, "show_death_coordinates"));
 		;
 
 	@Override
@@ -29,8 +29,8 @@ implements ModInitializer
 		Commands.Register();
 	}
 
-	static public MutableText ServersideTranslatable(String key, Object ... args){
-		String fallback = Language.getInstance().get(key);
-		return Text.translatableWithFallback(key, fallback, args);
+	static public MutableComponent ServersideTranslatable(String key, Object ... args){
+		String fallback = Language.getInstance().getOrDefault(key);
+		return Component.translatableWithFallback(key, fallback, args);
 	}
 }

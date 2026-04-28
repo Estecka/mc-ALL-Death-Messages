@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.entity.Entity;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
 import tk.estecka.alldeath.config.JsonConfig;
 import tk.estecka.alldeath.config.StyleParser;
 
@@ -51,11 +51,11 @@ public class DeathStyles
 	static public final String CONFIG_FILE = "alldeath-styles.json";
 	static public final List<MobStyle> STYLES = new ArrayList<MobStyle>();
 
-	static public Text	getStyledName(Entity entity) {
+	static public Component	getStyledName(Entity entity) {
 		return getStyledName(entity, entity.getDisplayName());
 	}
 
-	static public Text	getStyledName(Entity entity, Text name) {
+	static public Component	getStyledName(Entity entity, Component name) {
 		MobStyle deathStyle = new MobStyle();
 		for (var s : STYLES)
 			if (s.predicate.test(entity))
@@ -66,7 +66,7 @@ public class DeathStyles
 		if (deathStyle.color     != null) textStyle=textStyle.withColor        (deathStyle.color    );
 		if (deathStyle.bold      != null) textStyle=textStyle.withBold         (deathStyle.bold     );
 		if (deathStyle.italic    != null) textStyle=textStyle.withItalic       (deathStyle.italic   );
-		if (deathStyle.underline != null) textStyle=textStyle.withUnderline    (deathStyle.underline);
+		if (deathStyle.underline != null) textStyle=textStyle.withUnderlined   (deathStyle.underline);
 		if (deathStyle.strike    != null) textStyle=textStyle.withStrikethrough(deathStyle.strike   );
 		if (deathStyle.cursed    != null) textStyle=textStyle.withObfuscated   (deathStyle.cursed   );
 

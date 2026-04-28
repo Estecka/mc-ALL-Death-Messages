@@ -1,7 +1,7 @@
 {
 	"required": true,
 	"package": "tk.estecka.alldeath.mixin",
-	"compatibilityLevel": "JAVA_21",
+	"compatibilityLevel": "JAVA_25",
 	"mixins": [
 		"DamageSourceMixin",
 		"DamageTrackerMixin",

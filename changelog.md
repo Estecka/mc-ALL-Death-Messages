@@ -67,7 +67,7 @@ Initial release
 ### 1.6.2
 - Updated for MC 1.21.6 and 1.21.9
 ### 1.6.3
-- Marked as incompatible with MC 1.21.11
+- Marked as incompatible with MC 1.21.10
 ## 1.7
 - Port to MC 1.21.11
 - Updated gamerules to be valid identifiers
