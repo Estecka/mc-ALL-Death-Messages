@@ -38,11 +38,11 @@
 	"gamerule.showDeathMessages.tamed.kill":  "Show tamed mobs kills",
 	"gamerule.showDeathMessages.tamed.death.description": "Includes both pets (cats, dogs) and mounts (horses, llamas)",
 	"gamerule.showDeathMessages.tamed.kill.description":  "Includes both pets (cats, dogs) and mounts (horses, llamas)",
-	"gui.alldeath.entity_tooltip.location": "(%s) in %s",
 	"gamerule.showDeathMessages.boss.death": "Show boss mobs deathes",
 	"gamerule.showDeathMessages.boss.kill":  "Show boss mobs kills",
 	"gamerule.showDeathMessages.utility.death": "Show utility mobs deathes",
 	"gamerule.showDeathMessages.utility.kill":  "Show utility mobs kills",
 	"gamerule.showDeathMessages.player.death": "Show players deathes",
-	"gamerule.showDeathMessages.player.kill":  "Show players kills"
+	"gamerule.showDeathMessages.player.kill":  "Show players kills",
+	"gui.alldeath.entity_tooltip.location": "(%s) in %s"
 }
