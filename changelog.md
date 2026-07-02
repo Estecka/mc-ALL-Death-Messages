@@ -68,6 +68,15 @@ Initial release
 - Updated for MC 1.21.6 and 1.21.9
 ### 1.6.3
 - Marked as incompatible with MC 1.21.10
+### 1.6.4
+- Added translations for rules in the default config file.
+- Added ja_jp language
+
 ## 1.7
+### 1.7.0
+Forked from 1.6.3
 - Port to MC 1.21.11
 - Updated gamerules to be valid identifiers
+### 1.7.1
+- Added translations for rules in the default config file.
+- Added ja_jp language
