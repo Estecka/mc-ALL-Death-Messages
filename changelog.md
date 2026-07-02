@@ -67,4 +67,7 @@ Initial release
 ### 1.6.2
 - Updated for MC 1.21.6 and 1.21.9
 ### 1.6.3
-- Updated for MC 1.21.11
+- Marked as incompatible with MC 1.21.10
+### 1.6.4
+- Added translations for rules in the default config file.
+- Added ja_jp language
